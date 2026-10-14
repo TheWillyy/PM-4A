@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Reyda: Meet Emma</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Inter";
+        src: url("assets/fonts/Inter-var.woff2") format("woff2");
+        font-weight: 100 900;
+        font-display: block;
+      }
+      @font-face {
+        font-family: "Source Serif 4";
+        src: url("assets/fonts/SourceSerif4-var.woff2") format("woff2");
+        font-weight: 200 900;
+        font-display: block;
+      }
+      :root {
+        --ink: #17112f;
+        --ink-2: #2e2a45;
+        --muted: #6e6a85;
+        --soft: #6f6a83;
+        --line: #e6e3ef;
+        --lav: #f3f1f9;
+        --lav-2: #ece9f5;
+        --violet: #7a59e3;
+        --violet-d: #5b3fd6;
+        --violet-dd: #42307d;
+        --violet-l: #eeeafd;
+        --teal: #89d3cf;
+        --red: #b23a0a;
+        --red-l: #fdf0ea;
+        --green: #127a52;
+        --green-l: #e5f6ee;
+        --serif: "Source Serif 4", Georgia, serif;
+        --sans: "Inter", system-ui, sans-serif;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--lav); }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: var(--sans); color: var(--ink); }
+      .clip { position: absolute; inset: 0; width: 100%; height: 100%; }
+      .layer { position: absolute; inset: 0; }
+
+      /* ───────── shared background ───────── */
+      #bg { background: var(--lav); overflow: hidden; }
+      .blob { position: absolute; border-radius: 50%; filter: blur(110px); }
+      #blobA { width: 760px; height: 760px; left: 1340px; top: -380px; background: var(--violet); opacity: 0.32; }
+      #blobB { width: 820px; height: 820px; left: -300px; top: 620px; background: var(--teal); opacity: 0.4; }
+      #blobC { width: 520px; height: 520px; left: 640px; top: 760px; background: #c9bdf6; opacity: 0.35; }
+
+      /* ───────── headlines ───────── */
+      .head { position: absolute; font-family: var(--serif); font-weight: 600; letter-spacing: -0.02em; line-height: 1.04; color: var(--ink); }
+      .head em { font-style: normal; color: var(--violet-d); }
+      .w { display: inline-block; overflow: hidden; vertical-align: top; padding: 0.02em 0.04em 0.16em; margin: -0.02em -0.04em -0.16em; }
+      .wi { display: inline-block; }
+      .head.left { left: 130px; top: 0; bottom: 0; width: 640px; display: flex; align-items: center; font-size: 92px; }
+      .head.left > div { width: 100%; }
+      .kicker { position: absolute; left: 134px; top: 300px; font: 600 22px/1 var(--sans); letter-spacing: 0.14em; text-transform: uppercase; color: var(--violet-d); display: flex; align-items: center; gap: 14px; }
+      .kicker i { display: block; width: 44px; height: 3px; border-radius: 2px; background: var(--violet); }
+
+      /* ───────── generic UI ───────── */
+      .win { position: absolute; background: #fff; border-radius: 22px; box-shadow: 0 2px 0 rgba(23, 17, 47, 0.04), 0 30px 80px -20px rgba(46, 42, 69, 0.28), 0 0 0 1px rgba(46, 42, 69, 0.06); overflow: hidden; }
+      .chrome { height: 54px; display: flex; align-items: center; gap: 10px; padding: 0 22px; border-bottom: 1px solid var(--line); font: 600 15px/1 var(--sans); letter-spacing: 0.08em; text-transform: uppercase; color: var(--soft); }
+      .chrome b { width: 12px; height: 12px; border-radius: 50%; background: #dcd8e8; display: block; }
+      .chrome span { margin-left: 10px; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 0 16px; height: 38px; border-radius: 19px; border: 1px solid var(--line); font: 500 17px/1 var(--sans); color: var(--ink-2); background: #fff; white-space: nowrap; }
+      .badge { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 14px; font: 700 14px/1 var(--sans); letter-spacing: 0.06em; }
+      .emma { width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(160deg, #9277f0, var(--violet-d)); display: flex; align-items: center; justify-content: center; flex: none; color: #fff; }
+      .emma svg { width: 46%; height: auto; }
+      .tag { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 12px; background: var(--violet-l); color: var(--violet-d); font: 600 14px/1 var(--sans); }
+
+      /* ───────── 1–2 hook + reveal ───────── */
+      #hookBg { background: radial-gradient(120% 90% at 50% 40%, #2e2a45 0%, #1c1a2e 55%, #0a061e 100%); }
+      #pile { position: absolute; inset: 0; }
+      .notice { position: absolute; left: 820px; top: 460px; width: 280px; height: 160px; background: #fff; border-radius: 14px; padding: 18px 20px; box-shadow: 0 18px 40px -12px rgba(10, 6, 30, 0.45), 0 0 0 1px rgba(46, 42, 69, 0.08); display: flex; flex-direction: column; gap: 9px; }
+      .notice .src { display: flex; justify-content: space-between; font: 700 12px/1 var(--sans); letter-spacing: 0.1em; color: var(--soft); }
+      .notice .src i { font-style: normal; color: var(--violet-d); }
+      .notice h4 { font: 600 19px/1.2 var(--sans); color: var(--ink); height: 46px; overflow: hidden; }
+      .notice p { font: 400 14px/1 var(--sans); color: var(--muted); }
+      .notice .due { margin-top: auto; align-self: flex-start; height: 24px; padding: 0 10px; border-radius: 12px; background: var(--red-l); color: var(--red); font: 600 13px/24px var(--sans); }
+      #hookShade { opacity: 0; background: radial-gradient(60% 55% at 50% 50%, rgba(10, 6, 30, 0.92) 0%, rgba(10, 6, 30, 0.75) 55%, rgba(10, 6, 30, 0.25) 100%); }
+      #hookText { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; font-family: var(--serif); font-weight: 600; color: #fff; font-size: 150px; letter-spacing: -0.025em; line-height: 1; }
+      #hookText div { display: block; }
+      #hookText em { font-style: normal; color: #b9a6ff; }
+      #revealStage { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+      #logoPill { display: flex; align-items: center; gap: 22px; height: 132px; padding: 0 56px 0 46px; border-radius: 66px; background: linear-gradient(#fff, rgba(255, 255, 255, 0.82)); box-shadow: 0 0 0 5px #fff inset, 0 30px 70px -20px rgba(66, 48, 125, 0.4); color: var(--violet-dd); }
+      #logoPill svg { display: block; }
+      #revealHead { position: relative; margin-top: 70px; width: 1700px; height: 190px; }
+      #revealHead .head { inset: 0; display: flex; align-items: center; justify-content: center; gap: 36px; font-size: 156px; text-align: center; }
+      #revealHead .emma { width: 150px; height: 150px; border-radius: 38px; box-shadow: 0 20px 50px -14px rgba(91, 63, 214, 0.6); }
+
+      /* ───────── 3 find & qualify ───────── */
+      .src-chip { position: absolute; left: 790px; width: 230px; height: 74px; background: #fff; border-radius: 16px; box-shadow: 0 14px 34px -14px rgba(46, 42, 69, 0.3), 0 0 0 1px rgba(46, 42, 69, 0.06); display: flex; align-items: center; gap: 14px; padding: 0 18px; }
+      .src-chip .ic { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font: 700 15px/1 var(--sans); color: #fff; flex: none; }
+      .src-chip div { display: flex; flex-direction: column; gap: 6px; }
+      .src-chip strong { font: 600 18px/1 var(--sans); color: var(--ink); }
+      .src-chip small { font: 500 14px/1 var(--sans); color: var(--muted); }
+      #wires { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+      #findWin { left: 1060px; top: 120px; width: 760px; height: 840px; }
+      .findHead { padding: 26px 30px 18px; display: flex; flex-direction: column; gap: 16px; }
+      .findHead h3 { font: 600 28px/1 var(--sans); display: flex; align-items: center; gap: 14px; }
+      .findHead .row { display: flex; gap: 10px; }
+      #cards { position: relative; margin: 0 30px; height: 640px; }
+      .opp { position: absolute; left: 0; right: 0; height: 94px; border-radius: 16px; border: 1px solid var(--line); background: #fff; display: flex; align-items: center; padding: 0 22px; gap: 18px; }
+      .opp .glow { position: absolute; inset: -2px; border-radius: 17px; box-shadow: 0 0 0 3px var(--violet), 0 16px 40px -10px rgba(122, 89, 227, 0.55); opacity: 0; }
+      .opp .meta { flex: 1; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+      .opp h5 { font: 600 21px/1 var(--sans); color: var(--ink); white-space: nowrap; }
+      .opp p { font: 500 15px/1 var(--sans); color: var(--muted); white-space: nowrap; }
+      .opp p i { font-style: normal; color: var(--red); }
+      .fit { width: 104px; height: 60px; border-radius: 14px; background: var(--violet-l); color: var(--violet-d); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; flex: none; }
+      .fit.weak { background: #f1f0f4; color: var(--soft); }
+      .fit small { font: 700 11px/1 var(--sans); letter-spacing: 0.12em; }
+      .num { display: flex; height: 26px; overflow: hidden; font: 700 26px/26px var(--sans); font-variant-numeric: tabular-nums; }
+      .num .col { display: block; width: 0.62em; }
+      .num .col .rail > span { display: block; height: 26px; text-align: center; }
+      .num .pc { font-size: 18px; line-height: 30px; margin-left: 1px; }
+      .qual { position: absolute; right: 140px; top: 30px; height: 34px; padding: 0 14px; border-radius: 17px; background: var(--violet); color: #fff; font: 600 15px/34px var(--sans); white-space: nowrap; }
+      #emmaToast { position: absolute; left: 1100px; top: 834px; width: 680px; height: 92px; border-radius: 18px; background: var(--ink-2); color: #fff; display: flex; align-items: center; gap: 16px; padding: 0 22px; box-shadow: 0 24px 50px -16px rgba(23, 17, 47, 0.6); }
+      #emmaToast p { font: 500 19px/1.35 var(--sans); }
+      #emmaToast p b { font-weight: 600; color: #cbbdff; }
+
+      /* ───────── 4 write ───────── */
+      #docCam { position: absolute; left: 800px; top: 96px; width: 780px; height: 1400px; }
+      #docWin { left: 0; top: 0; width: 780px; height: 1400px; }
+      .docBody { padding: 34px 44px; }
+      .docBody h2 { font: 600 40px/1.15 var(--serif); color: var(--ink); margin: 6px 0 28px; }
+      .sec { margin-bottom: 30px; position: relative; }
+      .sec h6 { font: 700 14px/1 var(--sans); letter-spacing: 0.12em; text-transform: uppercase; color: var(--violet-d); margin-bottom: 14px; }
+      .ln { position: relative; height: 34px; }
+      .ln .sk { position: absolute; left: 0; top: 10px; height: 14px; border-radius: 7px; background: var(--lav-2); }
+      .ln .tx { position: absolute; left: 0; top: 0; font: 400 21px/34px var(--sans); color: var(--ink-2); white-space: nowrap; }
+      .ln sup { color: var(--violet-d); font-weight: 600; font-size: 13px; }
+      .cites { display: flex; gap: 10px; margin-top: 12px; }
+      .cites .pill { height: 30px; font-size: 14px; color: var(--muted); }
+      .hl { position: absolute; left: -16px; right: -16px; top: 30px; bottom: -10px; border-radius: 12px; background: var(--violet-l); border-left: 4px solid var(--violet); }
+      .price { display: flex; justify-content: space-between; font: 400 20px/42px var(--sans); color: var(--ink-2); border-bottom: 1px solid var(--line); }
+      .price b { font-weight: 600; font-variant-numeric: tabular-nums; }
+      #reqCard { left: 1530px; top: 150px; width: 340px; height: 340px; padding: 24px 26px; }
+      #reqCard h4 { font: 600 20px/1 var(--sans); display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+      #reqCard h4 .num { height: 22px; font-size: 20px; line-height: 22px; color: var(--violet-d); }
+      #reqCard h4 .num .col .rail > span { height: 22px; }
+      .req { display: flex; align-items: center; gap: 14px; height: 60px; border-top: 1px solid var(--line); font: 500 18px/1.2 var(--sans); color: var(--ink-2); }
+      .box { width: 28px; height: 28px; border-radius: 8px; border: 2px solid #d9d5e6; position: relative; flex: none; }
+      .box .on { position: absolute; inset: -2px; border-radius: 8px; background: var(--violet); display: flex; align-items: center; justify-content: center; }
+      #suggest { left: 1300px; top: 640px; width: 500px; padding: 22px 24px; display: flex; gap: 16px; }
+      #suggest .t { display: flex; flex-direction: column; gap: 10px; }
+      #suggest .t b { font: 600 17px/1 var(--sans); }
+      #suggest .t b span { font-weight: 500; color: var(--soft); margin-left: 6px; }
+      #suggest .t p { font: 400 17px/1.4 var(--sans); color: var(--ink-2); }
+      #suggest .btns { display: flex; gap: 10px; margin-top: 4px; }
+      .btn { height: 38px; padding: 0 18px; border-radius: 19px; font: 600 16px/38px var(--sans); background: var(--violet); color: #fff; display: inline-block; }
+      .btn.ghost { background: transparent; color: var(--violet-d); }
+
+      /* ───────── 5 team ───────── */
+      #teamHead { left: 0; right: 0; top: 96px; text-align: center; font-size: 92px; }
+      .note { position: absolute; width: 640px; padding: 22px 26px; }
+      .note .app { display: flex; align-items: center; gap: 10px; font: 600 15px/1 var(--sans); color: var(--muted); margin-bottom: 16px; }
+      .note .app .logo { width: 26px; height: 26px; border-radius: 7px; color: #fff; display: flex; align-items: center; justify-content: center; font: 800 15px/1 var(--sans); }
+      .note .app .when { margin-left: auto; font-weight: 500; color: var(--soft); }
+      .note .msg { display: flex; gap: 16px; }
+      .note .msg > div { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+      .note .who { font: 700 18px/1 var(--sans); display: flex; gap: 10px; align-items: center; }
+      .note .body { font: 400 19px/1.4 var(--sans); color: var(--ink-2); }
+      .note .body b { color: var(--violet-d); font-weight: 600; }
+      .att { margin-top: 6px; border-left: 4px solid var(--violet); border-radius: 4px; padding: 6px 14px; display: flex; flex-direction: column; gap: 8px; }
+      .att strong { font: 600 18px/1 var(--sans); }
+      .att small { font: 500 15px/1 var(--sans); color: var(--muted); }
+
+      /* ───────── 6 buyer ───────── */
+      #mailWin { left: 860px; top: 110px; width: 940px; height: 860px; }
+      .mail { margin: 26px 30px 0; border: 1px solid var(--line); border-radius: 18px; padding: 24px 26px; position: relative; background: #fff; }
+      .mail .from { display: flex; align-items: center; gap: 14px; }
+      .av { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font: 700 18px/1 var(--sans); color: #fff; flex: none; }
+      .mail .from div { display: flex; flex-direction: column; gap: 6px; }
+      .mail .from strong { font: 600 19px/1 var(--sans); }
+      .mail .from small { font: 400 15px/1 var(--sans); color: var(--muted); }
+      .mail .from .when { margin-left: auto; font: 500 15px/1 var(--sans); color: var(--soft); }
+      .mail h5 { font: 600 21px/1.3 var(--sans); margin: 18px 0 8px; }
+      .mail p { font: 400 19px/1.5 var(--sans); color: var(--ink-2); }
+      .unread { position: absolute; left: -7px; top: 40px; width: 14px; height: 14px; border-radius: 50%; background: var(--violet); }
+      #reply { border-color: rgba(122, 89, 227, 0.45); box-shadow: 0 0 0 4px rgba(122, 89, 227, 0.08); }
+      #reply .rl { font: 400 19px/30px var(--sans); color: var(--ink-2); white-space: nowrap; }
+      #reply .rl b { color: var(--violet-d); font-weight: 600; }
+      .caret { display: inline-block; width: 2px; height: 22px; background: var(--violet); vertical-align: -4px; margin-left: 2px; }
+      #sendRow { display: flex; align-items: center; justify-content: flex-end; gap: 16px; margin-top: 22px; }
+      #sendBtn { position: relative; width: 150px; height: 50px; border-radius: 25px; background: var(--violet); color: #fff; font: 600 18px/50px var(--sans); text-align: center; overflow: hidden; }
+      #sendBtn .a, #sendBtn .b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 8px; }
+      #sendBtn .b { background: var(--green); }
+      #sentNote { font: 500 16px/1 var(--sans); color: var(--green); }
+
+      /* ───────── 7 payoff ───────── */
+      #slackWin { left: 900px; top: 150px; width: 880px; height: 780px; }
+      .chan { height: 64px; border-bottom: 1px solid var(--line); display: flex; align-items: center; padding: 0 28px; font: 700 22px/1 var(--sans); gap: 10px; }
+      .chan .logo { width: 30px; height: 30px; border-radius: 8px; background: #4a154b; color: #fff; display: flex; align-items: center; justify-content: center; font: 800 17px/1 var(--sans); }
+      .smsg { display: flex; gap: 16px; padding: 22px 28px 0; }
+      .smsg > div { display: flex; flex-direction: column; gap: 10px; }
+      .smsg .who { font: 700 19px/1 var(--sans); display: flex; gap: 10px; align-items: center; }
+      .smsg .who span { font-weight: 500; font-size: 15px; color: var(--soft); }
+      .smsg .body { font: 400 22px/1.4 var(--sans); color: var(--ink-2); }
+      .readyCard { border: 1px solid var(--line); border-left: 4px solid var(--violet); border-radius: 10px; padding: 16px 20px; display: flex; flex-direction: column; gap: 14px; width: 620px; }
+      .readyCard strong { font: 600 19px/1 var(--sans); }
+      .readyCard .row { display: flex; gap: 10px; }
+      .readyCard .row .pill { height: 34px; font-size: 15px; }
+      .youAv { width: 44px; height: 44px; border-radius: 12px; background: #ad4f1c; color: #fff; display: flex; align-items: center; justify-content: center; font: 700 17px/1 var(--sans); flex: none; }
+      #typing { display: flex; align-items: center; gap: 10px; padding: 18px 28px 0 88px; font: 500 16px/1 var(--sans); color: var(--soft); }
+      #typing i { width: 8px; height: 8px; border-radius: 50%; background: var(--soft); display: block; }
+      #goMsg .body { font-size: 30px; font-weight: 600; color: var(--ink); }
+      #burst { position: absolute; left: 1340px; top: 540px; width: 0; height: 0; }
+      #burst .ring { position: absolute; left: -200px; top: -200px; width: 400px; height: 400px; border-radius: 50%; border: 6px solid var(--violet); }
+      #burst .ray { position: absolute; left: -3px; top: -150px; width: 6px; height: 54px; border-radius: 3px; background: var(--violet); transform-origin: 3px 150px; }
+      #burst .pt { position: absolute; width: 12px; height: 12px; border-radius: 3px; left: -6px; top: -6px; }
+      #subPill { position: absolute; left: -230px; top: -60px; width: 460px; height: 120px; border-radius: 60px; background: var(--violet); color: #fff; display: flex; align-items: center; justify-content: center; gap: 18px; font: 700 46px/1 var(--sans); box-shadow: 0 30px 70px -16px rgba(91, 63, 214, 0.7); }
+
+      /* ───────── 8 cta ───────── */
+      #ctaBg { background: radial-gradient(110% 90% at 50% 45%, #3a3458 0%, #2e2a45 50%, #1c1a2e 100%); }
+      #ctaStage { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+      #ctaPill { display: flex; align-items: center; gap: 16px; height: 96px; padding: 0 42px 0 34px; border-radius: 48px; background: linear-gradient(#fff, rgba(255, 255, 255, 0.85)); box-shadow: 0 0 0 4px #fff inset; color: var(--violet-dd); }
+      #ctaHead { margin-top: 64px; font: 600 132px/1.05 var(--serif); letter-spacing: -0.025em; color: #fff; text-align: center; }
+      #ctaHead > div { display: block; }
+      #ctaUrl { margin-top: 70px; position: relative; font: 500 46px/1 var(--sans); color: #fff; padding-bottom: 14px; }
+      #ctaUrl i { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; border-radius: 2px; background: #b9a6ff; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="45" data-width="1920" data-height="1080">
+      <audio id="music" src="assets/music.mp3" data-start="0" data-duration="45" data-track-index="9" data-volume="1"></audio>
+
+      <!-- shared lavender stage -->
+      <div id="bg" class="clip" data-start="0" data-duration="45" data-track-index="0">
+        <div class="blob" id="blobA"></div>
+        <div class="blob" id="blobB"></div>
+        <div class="blob" id="blobC"></div>
+      </div>
+
+      <!-- 1–2 · HOOK + REVEAL (0–9) -->
+      <section id="s-hook" class="clip" data-start="0" data-duration="9.4" data-track-index="1">
+        <div id="hookBg" class="layer"></div>
+        <div id="pile" data-layout-allow-overlap></div>
+        <div id="hookShade" class="layer"></div>
+        <div id="hookText" data-layout-allow-overlap>
+          <div id="hk1"><span class="w"><span class="wi">Too</span></span> <span class="w"><span class="wi">many</span></span> <span class="w"><span class="wi">tenders.</span></span></div>
+          <div id="hk2"><span class="w"><span class="wi"><em>Too</em></span></span> <span class="w"><span class="wi"><em>little</em></span></span> <span class="w"><span class="wi"><em>time.</em></span></span></div>
+        </div>
+        <div id="revealStage">
+          <div id="logoPill">
+            <svg width="62" height="84" viewBox="181 81 23 31"><path fill="currentColor" d="M202.404 108.494C202.404 109.88 201.374 111.003 200.104 111.003H184.574C183.303 111.003 182.273 109.88 182.273 108.494V105.616C182.273 105.18 182.497 104.775 182.866 104.543L200.461 93.468C201.305 92.9365 202.404 93.5397 202.404 94.5399V108.494Z"/><path fill="currentColor" d="M200.104 82.4707C201.374 82.4707 202.404 83.5937 202.404 84.979V88.6481C202.404 89.0839 202.181 89.4892 201.812 89.7213L184.217 100.797C183.373 101.328 182.273 100.725 182.273 99.7249V84.979C182.273 83.5937 183.303 82.4707 184.574 82.4707H200.104Z"/></svg>
+            <svg id="wordmark" width="268" height="94" viewBox="210 84 96 33.6"></svg>
+          </div>
+          <div id="revealHead" data-layout-allow-overlap>
+            <div class="head" id="rv1"><div class="emma" id="rvAv"></div><div><span class="w"><span class="wi">Meet</span></span> <span class="w"><span class="wi"><em>Emma.</em></span></span></div></div>
+            <div class="head" id="rv2"><div><span class="w"><span class="wi">Your</span></span> <span class="w"><span class="wi">AI</span></span> <span class="w"><span class="wi"><em>bid</em></span></span> <span class="w"><span class="wi"><em>manager.</em></span></span></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 · FIND & QUALIFY (9–17) -->
+      <section id="s-find" class="clip" data-start="8.6" data-duration="8.8" data-track-index="2">
+        <div class="kicker" id="findKick"><i></i>Find</div>
+        <div class="head left" id="fh1" data-layout-allow-overlap><div>Finds <em>opportunities</em> everywhere.</div></div>
+        <div class="head left" id="fh2" data-layout-allow-overlap><div>Qualifies the ones <em>worth winning.</em></div></div>
+        <svg id="wires"></svg>
+        <div id="srcs"></div>
+        <div class="win" id="findWin">
+          <div class="chrome"><b></b><b></b><b></b><span>app.reyda.ai / find</span></div>
+          <div class="findHead">
+            <h3>Matched opportunities <span class="badge" style="background: var(--violet-l); color: var(--violet-d)">12 NEW</span></h3>
+            <div class="row"><span class="pill">IT infrastructure Germany</span><span class="pill">CPV 72000000</span><span class="pill">Min. €500K</span></div>
+          </div>
+          <div id="cards"></div>
+        </div>
+        <div id="emmaToast"><div class="emma"></div><p><b>Emma:</b> 3 worth bidding on. 3 skipped as a poor fit.</p></div>
+      </section>
+
+      <!-- 4 · WRITE (17–24) -->
+      <section id="s-write" class="clip" data-start="16.6" data-duration="7.8" data-track-index="3">
+        <div class="kicker" id="writeKick"><i></i>Write</div>
+        <div class="head left" id="wh1" data-layout-allow-overlap><div>Writes the bid <em>for you.</em></div></div>
+        <div id="docCam" data-layout-allow-overlap>
+          <div class="win" id="docWin">
+            <div class="chrome"><b></b><b></b><b></b><span>ITT/2026/FM-014 · Response</span></div>
+            <div class="docBody">
+              <h2>Facilities Management Services, 14 Primary Schools</h2>
+              <div class="sec" id="sec1">
+                <h6>1 · Executive summary</h6>
+                <div class="ln"><i class="sk" style="width: 690px"></i><span class="tx">One accountable team delivers facilities management across</span></div>
+                <div class="ln"><i class="sk" style="width: 640px"></i><span class="tx">all 14 sites from day one, with a single named contract lead</span></div>
+                <div class="ln"><i class="sk" style="width: 420px"></i><span class="tx">and weekly reporting to the city.</span></div>
+              </div>
+              <div class="sec" id="sec2">
+                <h6>2.3 · Quality assurance</h6>
+                <div class="ln"><i class="sk" style="width: 660px"></i><span class="tx">Inspections follow a digital checklist<sup>[1]</sup>, proven across</span></div>
+                <div class="ln"><i class="sk" style="width: 300px"></i><span class="tx">14 school sites<sup>[2]</sup>.</span></div>
+                <div class="cites"><span class="pill">[1] QA Handbook p.12</span><span class="pill">[2] Munich bid 2022</span></div>
+              </div>
+              <div class="sec" id="sec3">
+                <h6>3.2 · Service delivery methodology</h6>
+                <div class="hl" id="hl3"></div>
+                <div class="ln"><i class="sk" style="width: 640px"></i><span class="tx">Our 30-day mobilisation plan mirrors the model we delivered</span></div>
+                <div class="ln"><i class="sk" style="width: 600px"></i><span class="tx">on the GDF climate programme, with weekly KPI reviews</span></div>
+                <div class="ln"><i class="sk" style="width: 380px"></i><span class="tx">against all four scoring criteria.</span></div>
+              </div>
+              <div class="sec" id="sec4">
+                <h6>4 · Pricing schedule</h6>
+                <div class="price"><span>Cleaning services, 14 sites</span><b>€1,420,000</b></div>
+                <div class="price"><span>Planned maintenance</span><b>€610,000</b></div>
+                <div class="price"><span>Mobilisation</span><b>€80,000</b></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="win" id="suggest" data-layout-allow-overlap>
+          <div class="emma"></div>
+          <div class="t">
+            <b>Emma <span>suggested edit</span></b>
+            <p>Rewrote 3.2 from your 2025 GDF bid. Now covers all 4 scoring criteria.</p>
+            <div class="btns"><span class="btn" id="acceptBtn">Accept</span><span class="btn ghost">Review</span></div>
+          </div>
+        </div>
+        <div class="win" id="reqCard">
+          <h4>Requirements <span class="num" id="reqNum"></span></h4>
+          <div id="reqs"></div>
+        </div>
+      </section>
+
+      <!-- 5 · TEAM (24–31) -->
+      <section id="s-team" class="clip" data-start="23.6" data-duration="7.8" data-track-index="4">
+        <div class="head" id="teamHead"><div>Keeps your team <em>in the loop.</em></div></div>
+        <div id="notes"></div>
+      </section>
+
+      <!-- 6 · BUYER (31–37) -->
+      <section id="s-buyer" class="clip" data-start="30.6" data-duration="6.8" data-track-index="5">
+        <div class="kicker" id="buyKick"><i></i>Manage</div>
+        <div class="head left" id="bh1"><div>Handles <em>buyer emails.</em></div></div>
+        <div class="win" id="mailWin">
+          <div class="chrome"><b></b><b></b><b></b><span>Inbox · Bids</span></div>
+          <div class="mail" id="inMail">
+            <i class="unread" id="unread"></i>
+            <div class="from"><div class="av" style="background: #1d6f8f">M</div><div><strong>Procurement, City of Munich</strong><small>vergabe@muenchen.de</small></div><span class="when">09:12</span></div>
+            <h5>ITT/2026/FM-014: Clarification request</h5>
+            <p>Please confirm your mobilisation timeline, and whether any services will be subcontracted.</p>
+          </div>
+          <div class="mail" id="reply">
+            <div class="from"><div class="emma"></div><div><strong>Reply drafted by Emma</strong><small>Sources: your bid §3.2, tender Q14</small></div><span class="when">09:14</span></div>
+            <div style="margin-top: 16px">
+              <div class="rl"><span>Mobilisation completes within <b>30 days of award</b> (see §3.2).</span></div>
+              <div class="rl"><span>We subcontract only specialist glass cleaning, <b>12% of value</b>,</span></div>
+              <div class="rl"><span>well within the 30% cap confirmed in Q14.</span><i class="caret" id="caret"></i></div>
+            </div>
+            <div id="sendRow">
+              <span id="sentNote">Sent 2 min after receipt</span>
+              <div id="sendBtn" data-layout-allow-overlap><div class="a">Send</div><div class="b"><svg width="24" height="24" viewBox="0 0 24 24"><path id="sentTick" d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>Sent</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7 · PAYOFF (37–42) -->
+      <section id="s-pay" class="clip" data-start="36.6" data-duration="6.05" data-track-index="6">
+        <div class="head left" id="ph1"><div>You say go. <em>Emma submits.</em></div></div>
+        <div class="win" id="slackWin">
+          <div class="chan"><span class="logo">#</span>bids</div>
+          <div class="smsg" id="readyMsg">
+            <div class="emma"></div>
+            <div>
+              <div class="who">Emma <span class="tag">Bid manager</span> <span>09:41</span></div>
+              <div class="body">Bid ready. <b>Go ahead?</b></div>
+              <div class="readyCard">
+                <strong>ITT/2026/FM-014 · Facilities Management Services</strong>
+                <div class="row"><span class="pill">✓ 4/4 requirements</span><span class="pill">94% fit</span><span class="pill">Due 04 Nov, 12:00</span></div>
+              </div>
+            </div>
+          </div>
+          <div id="typing"><i></i><i></i><i></i><span>Laura is typing…</span></div>
+          <div class="smsg" id="goMsg">
+            <div class="youAv">LS</div>
+            <div>
+              <div class="who">Laura Schmidt <span>09:42</span></div>
+              <div class="body">Go 👍</div>
+            </div>
+          </div>
+        </div>
+        <div id="burst"><div class="ring"></div><div id="rays"></div><div id="pts"></div><div id="subPill">Submitted <svg width="46" height="46" viewBox="0 0 24 24"><path id="subTick" d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      </section>
+
+      <!-- 8 · CTA (42–45) -->
+      <section id="s-cta" class="clip" data-start="41.9" data-duration="3.1" data-track-index="7">
+        <div id="ctaBg" class="layer"></div>
+        <div id="ctaStage">
+          <div id="ctaPill">
+            <svg width="46" height="62" viewBox="181 81 23 31"><path fill="currentColor" d="M202.404 108.494C202.404 109.88 201.374 111.003 200.104 111.003H184.574C183.303 111.003 182.273 109.88 182.273 108.494V105.616C182.273 105.18 182.497 104.775 182.866 104.543L200.461 93.468C201.305 92.9365 202.404 93.5397 202.404 94.5399V108.494Z"/><path fill="currentColor" d="M200.104 82.4707C201.374 82.4707 202.404 83.5937 202.404 84.979V88.6481C202.404 89.0839 202.181 89.4892 201.812 89.7213L184.217 100.797C183.373 101.328 182.273 100.725 182.273 99.7249V84.979C182.273 83.5937 183.303 82.4707 184.574 82.4707H200.104Z"/></svg>
+            <svg id="ctaWord" width="196" height="69" viewBox="210 84 96 33.6"></svg>
+          </div>
+          <div id="ctaHead">
+            <div><span class="w"><span class="wi">Make</span></span> <span class="w"><span class="wi">room</span></span></div>
+            <div><span class="w"><span class="wi">for</span></span> <span class="w"><span class="wi">ambition.</span></span></div>
+          </div>
+          <div id="ctaUrl">reyda.ai<i id="ctaLine"></i></div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      // ── shared bits ───────────────────────────────────────────
+      const $ = (s, r = document) => r.querySelector(s);
+      const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+      const prand = (n) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+      const MARK = `<svg viewBox="181 81 23 31"><path fill="currentColor" d="M202.404 108.494C202.404 109.88 201.374 111.003 200.104 111.003H184.574C183.303 111.003 182.273 109.88 182.273 108.494V105.616C182.273 105.18 182.497 104.775 182.866 104.543L200.461 93.468C201.305 92.9365 202.404 93.5397 202.404 94.5399V108.494Z"/><path fill="currentColor" d="M200.104 82.4707C201.374 82.4707 202.404 83.5937 202.404 84.979V88.6481C202.404 89.0839 202.181 89.4892 201.812 89.7213L184.217 100.797C183.373 101.328 182.273 100.725 182.273 99.7249V84.979C182.273 83.5937 183.303 82.4707 184.574 82.4707H200.104Z"/></svg>`;
+      const WORD = `<path fill="currentColor" d="M223.557 87.4541V91.7529H221.845C218.497 91.7529 216.405 93.5409 216.405 97.193V106.323H211.764V87.5682H216.139L216.405 90.3073C217.204 88.4813 218.954 87.2639 221.427 87.2639C222.073 87.2639 222.682 87.3019 223.557 87.4541Z"/><path fill="currentColor" d="M234.474 106.818C228.882 106.818 224.964 102.747 224.964 96.9267C224.964 91.0301 228.806 86.9596 234.322 86.9596C239.952 86.9596 243.528 90.7258 243.528 96.5843V97.9919L229.415 98.03C229.757 101.34 231.508 103.014 234.588 103.014C237.137 103.014 238.811 102.024 239.343 100.236H243.642C242.843 104.345 239.419 106.818 234.474 106.818ZM234.36 90.7638C231.622 90.7638 229.948 92.2475 229.491 95.0626H238.887C238.887 92.4757 237.099 90.7638 234.36 90.7638Z"/><path fill="currentColor" d="M244.975 115.035V111.155H247.753C249.579 111.155 250.72 110.736 251.519 108.53L252.051 107.122L244.481 87.5302H249.388L254.22 101.207L259.288 87.5302H264.08L254.638 111.231C253.193 114.845 251.139 116.177 247.943 116.177C246.802 116.177 245.851 116.024 244.975 115.035Z"/><path fill="currentColor" d="M273.615 106.818C268.175 106.818 264.789 102.823 264.789 97.0028C264.789 91.1442 268.213 86.9596 273.882 86.9596C276.507 86.9596 278.789 88.0628 279.93 89.9269V78.6406H284.534V106.323H280.273L279.968 103.432C278.865 105.6 276.43 106.818 273.615 106.818ZM274.643 102.595C277.876 102.595 279.892 100.274 279.892 96.8506C279.892 93.4268 277.876 91.0682 274.643 91.0682C271.409 91.0682 269.469 93.4648 269.469 96.8506C269.469 100.236 271.409 102.595 274.643 102.595Z"/><path fill="currentColor" d="M295.039 106.818C291.044 106.818 288.61 104.497 288.61 100.959C288.61 97.4974 291.12 95.3289 295.571 94.9866L301.202 94.5681V94.149C301.202 91.6002 299.68 90.5731 297.321 90.5731C294.583 90.5731 293.061 91.7144 293.061 93.6926H289.104C289.104 89.6221 292.452 86.9596 297.549 86.9596C302.609 86.9596 305.728 89.6982 305.728 94.9106V106.323H301.657L301.315 103.546C300.517 105.486 297.968 106.818 295.039 106.818ZM296.56 103.318C299.413 103.318 301.24 101.607 301.24 98.7148V97.7258L297.321 98.0303C294.43 98.2965 293.327 99.2475 293.327 100.769C293.327 102.481 294.468 103.318 296.56 103.318Z"/>`;
+      $("#wordmark").innerHTML = WORD;
+      $("#ctaWord").innerHTML = WORD;
+      $$(".emma").forEach((e) => (e.innerHTML = MARK));
+
+      // vertical digit ticker (seek-safe count-up: transforms only)
+      function ticker(el, digits) {
+        el.innerHTML = "";
+        const cols = [];
+        for (let d = 0; d < digits; d++) {
+          const c = document.createElement("span");
+          c.className = "col";
+          const inner = document.createElement("div");
+          inner.className = "rail";
+          for (let k = 0; k < 20; k++) { const s = document.createElement("span"); s.textContent = k % 10; inner.appendChild(s); }
+          c.appendChild(inner); el.appendChild(c); cols.push(inner);
+        }
+        return cols;
+      }
+
+      // ── 1. hook pile ────────────────────────────────────────
+      const NOTICES = [
+        ["TED", "School cleaning, 14 primary sites", "City of Munich", "Due in 3 days"],
+        ["BUND.DE", "IT Infrastructure Modernization", "Bundesamt für Migration", "Due in 12 days"],
+        ["DTVP", "Winter road service, Lot 2", "Landkreis Ebersberg", "Due tomorrow"],
+        ["TED", "Cloud Services Framework", "City of Munich", "Due in 18 days"],
+        ["E-VERGABE", "Hospital catering services", "Klinikum Nord", "Due in 4 days"],
+        ["TED", "Cybersecurity Assessment", "Deutsche Bahn AG", "Due in 25 days"],
+        ["BUND.DE", "Office furniture supply, Lot 4", "Landkreis Ebersberg", "Due in 5 days"],
+        ["DTVP", "Glass cleaning, university campus", "TU Berlin", "Due in 6 days"],
+        ["TED", "Fleet maintenance services", "Stadtwerke Köln", "Due in 9 days"],
+        ["REGIONAL", "Building services framework", "Stadt Augsburg", "Due in 2 days"],
+        ["TED", "Security guarding, 6 sites", "Land Hessen", "Due in 8 days"],
+        ["BUND.DE", "Data centre migration", "ITZBund", "Due in 21 days"],
+        ["E-VERGABE", "Grounds maintenance", "Stadt Freiburg", "Due in 7 days"],
+        ["TED", "Translation services panel", "European Investment Bank", "Due in 11 days"],
+        ["DTVP", "HVAC servicing, town hall", "Stadt Bonn", "Due in 3 days"],
+        ["REGIONAL", "Library cleaning", "Stadt Regensburg", "Due in 10 days"],
+        ["TED", "Legal advisory framework", "Bundesnetzagentur", "Due in 14 days"],
+        ["BUND.DE", "Print management services", "Deutsche Rentenversicherung", "Due in 5 days"],
+        ["TED", "Waste collection, district 4", "Stadt Leipzig", "Due in 16 days"],
+        ["DTVP", "Office cleaning, town hall", "Stadt Ulm", "Due tomorrow"],
+        ["E-VERGABE", "Facility management, depot", "BVG Berlin", "Due in 9 days"],
+        ["TED", "Network security audit", "Land Bayern", "Due in 13 days"],
+        ["REGIONAL", "Hospital façade cleaning", "Uniklinik Mainz", "Due in 22 days"],
+        ["BUND.DE", "Staff canteen catering", "Bundesministerium der Finanzen", "Due in 7 days"],
+        ["TED", "Emergency cover, 24h", "Stadt Nürnberg", "Due in 4 days"],
+        ["DTVP", "Software licences, Lot 1", "Polizei NRW", "Due in 19 days"],
+        ["TED", "Window cleaning framework", "Stadt Hamburg", "Due in 6 days"],
+        ["E-VERGABE", "Grid maintenance services", "Netze BW", "Due in 15 days"],
+      ];
+      const pile = $("#pile");
+      const notices = NOTICES.map(([src, title, buyer, due], i) => {
+        const d = document.createElement("div");
+        d.className = "notice";
+        d.innerHTML = `<div class="src"><span>TENDER NOTICE</span><i>${src}</i></div><h4>${title}</h4><p>${buyer}</p><span class="due">${due}</span>`;
+        pile.appendChild(d);
+        return d;
+      });
+      // grid slots (7×4) the chaos snaps into on the drop
+      const GCOLS = 7, GROWS = 4, GS = 0.8, CW = 280 * GS, CH = 160 * GS, GAP = 16;
+      const gridPos = (i) => {
+        const c = i % GCOLS, r = Math.floor(i / GCOLS);
+        return { x: (c - (GCOLS - 1) / 2) * (CW + GAP), y: (r - (GROWS - 1) / 2) * (CH + GAP) };
+      };
+
+      // ── 3. find: sources + opportunity cards ────────────────
+      const SOURCES = [
+        ["TED Europa", "12,400+ notices", "#3f28b0", "EU"],
+        ["BUND.de", "3,200+ notices", "#1d6f8f", "DE"],
+        ["Regional portals", "8,600+ notices", "#127a52", "16"],
+        ["Aggregators", "5,100+ notices", "#ad4f1c", "+"],
+      ];
+      const SRC_Y = [250, 390, 530, 670];
+      const srcs = $("#srcs");
+      const srcEls = SOURCES.map(([n, c, col, ic], i) => {
+        const d = document.createElement("div");
+        d.className = "src-chip";
+        d.style.top = SRC_Y[i] + "px";
+        d.innerHTML = `<span class="ic" style="background:${col}">${ic}</span><div><strong>${n}</strong><small>${c}</small></div>`;
+        srcs.appendChild(d);
+        return d;
+      });
+      const wires = $("#wires");
+      const wireEls = SRC_Y.map((y, i) => {
+        const y0 = y + 37, y1 = 470;
+        const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        p.setAttribute("d", `M1020 ${y0} C1045 ${y0} 1035 ${y1} 1060 ${y1}`);
+        p.setAttribute("fill", "none"); p.setAttribute("stroke", "#7a59e3"); p.setAttribute("stroke-width", "3");
+        p.setAttribute("stroke-linecap", "round"); p.setAttribute("stroke-dasharray", "4 10");
+        wires.appendChild(p);
+        return p;
+      });
+      const OPPS = [
+        ["IT Infrastructure Modernization", "Bundesamt für Migration · €2.4M", "12 days left", 94, true],
+        ["Office Furniture Supply, Lot 4", "Landkreis Ebersberg · €180K", "5 days left", 38, false],
+        ["Cloud Services Framework", "City of Munich · €890K", "18 days left", 87, true],
+        ["Fleet Maintenance Services", "Stadtwerke Köln · €640K", "9 days left", 31, false],
+        ["Cybersecurity Assessment", "Deutsche Bahn AG · €1.2M", "25 days left", 82, true],
+        ["Staff Canteen Catering", "Bundesministerium der Finanzen · €320K", "7 days left", 24, false],
+      ];
+      const ROW = 106;
+      const cardsEl = $("#cards");
+      const opps = OPPS.map(([t, m, due, fit, strong], i) => {
+        const d = document.createElement("div");
+        d.className = "opp";
+        d.style.top = i * ROW + "px";
+        d.innerHTML = `<div class="glow"></div><div class="meta"><h5>${t}</h5><p>${m} · <i>${due}</i></p></div><div class="fit ${strong ? "" : "weak"}"><div class="num"></div><small>FIT</small></div>`;
+        cardsEl.appendChild(d);
+        const num = $(".num", d);
+        const cols = ticker(num, 2);
+        const pc = document.createElement("span"); pc.className = "pc"; pc.textContent = "%"; num.appendChild(pc);
+        let q = null;
+        if (strong) { q = document.createElement("span"); q.className = "qual"; q.textContent = "✓ Qualified"; d.appendChild(q); }
+        return { el: d, cols, fit, strong, q, glow: $(".glow", d) };
+      });
+
+      // ── 4. write: requirements ──────────────────────────────
+      const REQS = ["Executive summary", "Quality assurance process", "Service delivery method", "Pricing schedule"];
+      const reqsEl = $("#reqs");
+      const reqOn = REQS.map((r) => {
+        const d = document.createElement("div");
+        d.className = "req";
+        d.innerHTML = `<span class="box"><span class="on"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span><span>${r}</span>`;
+        reqsEl.appendChild(d);
+        return $(".on", d);
+      });
+      const reqCol = ticker($("#reqNum"), 1)[0];
+      { const s = document.createElement("span"); s.textContent = "/4"; s.style.marginLeft = "2px"; $("#reqNum").appendChild(s); }
+
+      // ── 5. team notifications ───────────────────────────────
+      const SLACK = { name: "Slack", ch: "#bids", col: "#4a154b", glyph: "#" };
+      const TEAMS = { name: "Microsoft Teams", ch: "Bid team", col: "#5b5fc7", glyph: "T" };
+      const NOTES = [
+        [SLACK, -1, 160, 300, "09:41", `New tender match for your team.`, `<div class="att"><strong>Facilities Management Services ITT</strong><small>City Procurement Office · 87% fit · est. €1.2M</small></div>`],
+        [TEAMS, 1, 1120, 360, "10:02", `Pricing schedule is at risk. <b>@Amy</b>, can you send the v3 rates by Thursday?`, ""],
+        [SLACK, -1, 160, 640, "10:15", `<b>@George</b> owns pricing on this one. I've shared last year's pricing model with him in a thread.`, ""],
+        [TEAMS, 1, 1120, 660, "11:30", `Deadline moved: <s>28 Oct</s> → <b>04 Nov, 12:00</b>. Calendars updated for LS and AM.`, ""],
+      ];
+      const notesEl = $("#notes");
+      const noteEls = NOTES.map(([app, side, x, y, when, body, extra]) => {
+        const d = document.createElement("div");
+        d.className = "win note";
+        d.style.left = x + "px"; d.style.top = y + "px";
+        d.innerHTML = `<div class="app"><span class="logo" style="background:${app.col}">${app.glyph}</span>${app.name} · ${app.ch}<span class="when">${when}</span></div><div class="msg"><div class="emma">${MARK}</div><div><div class="who">Emma <span class="tag">Bid manager</span></div><div class="body">${body}</div>${extra}</div></div>`;
+        notesEl.appendChild(d);
+        return { el: d, side };
+      });
+
+      // ── 7. burst particles ──────────────────────────────────
+      const raysEl = $("#rays"), ptsEl = $("#pts");
+      const rays = [...Array(14)].map((_, i) => { const r = document.createElement("i"); r.className = "ray"; r.style.rotate = (i * 360) / 14 + "deg"; raysEl.appendChild(r); return r; });
+      const PCOL = ["#7a59e3", "#89d3cf", "#b9a6ff", "#e98b5f", "#5b3fd6"];
+      const pts = [...Array(36)].map((_, i) => {
+        const p = document.createElement("i"); p.className = "pt"; p.style.background = PCOL[i % PCOL.length]; ptsEl.appendChild(p);
+        const a = prand(i * 3.1) * Math.PI * 2, sp = 380 + prand(i * 7.7) * 520;
+        return { p, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 260, spin: (prand(i * 5.3) - 0.5) * 900 };
+      });
+
+      // ── timeline ────────────────────────────────────────────
+      const B = 0.5; // 120 BPM: one beat = 0.5 s, one bar = 2 s
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+      const wis = (sel) => $$(`${sel} .wi`);
+
+      // word-mask headline helpers (applied to authored .head.left blocks)
+      function splitHead(el) {
+        const host = el.firstElementChild;
+        const walk = (node, accent) => {
+          const out = [];
+          node.childNodes.forEach((n) => {
+            if (n.nodeType === 3) n.textContent.split(/([ \t\n]+)/).forEach((t) => { if (t) out.push(/^[ \t\n]+$/.test(t) ? " " : `<span class="w"><span class="wi">${accent ? `<em>${t}</em>` : t}</span></span>`); });
+            else out.push(...walk(n, true));
+          });
+          return out;
+        };
+        host.innerHTML = walk(host, false).join("");
+      }
+      ["#fh1", "#fh2", "#wh1", "#teamHead", "#bh1", "#ph1"].forEach((s) => splitHead($(s)));
+      const headIn = (sel, t, d = 0.8) => tl.fromTo(wis(sel), { yPercent: 115, rotation: 5 }, { yPercent: 0, rotation: 0, duration: d, ease: "expo.out", stagger: 0.055 }, t);
+      const headOut = (sel, t) => tl.to(wis(sel), { yPercent: -115, duration: 0.42, ease: "power3.in", stagger: 0.03 }, t);
+      const kickIn = (sel, t) => tl.fromTo(sel, { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.6 }, t);
+      const winIn = (sel, t, from = { y: 90, scale: 0.94 }) => tl.fromTo(sel, { opacity: 0, ...from }, { opacity: 1, y: 0, x: 0, scale: 1, duration: 0.9, ease: "back.out(1.25)" }, t);
+      const sceneOut = (sel, t) => tl.to(sel, { opacity: 0, y: -50, scale: 0.97, duration: 0.45, ease: "power2.in" }, t);
+
+      // background drift (finite, seek-safe)
+      tl.fromTo("#blobA", { x: 0, y: 0 }, { x: -260, y: 120, duration: 45, ease: "sine.inOut" }, 0);
+      tl.fromTo("#blobB", { x: 0, y: 0 }, { x: 320, y: -180, duration: 45, ease: "sine.inOut" }, 0);
+      tl.fromTo("#blobC", { x: 0, y: 0 }, { x: 420, y: -60, duration: 45, ease: "sine.inOut" }, 0);
+
+      // ═════ 1 · HOOK 0–4 ═════ cards land on 16ths, accelerating chaos
+      notices.forEach((n, i) => {
+        const t = i * 0.125;
+        const px = (prand(i + 1) - 0.5) * 1700, py = (prand(i + 41) - 0.5) * 860, rot = (prand(i + 77) - 0.5) * 40;
+        const fromLeft = prand(i + 9) > 0.5;
+        tl.fromTo(n, { x: px + (fromLeft ? -900 : 900) * prand(i + 3), y: py - 700, rotation: rot * 3, scale: 1.25, opacity: 0 },
+          { x: px, y: py, rotation: rot, scale: 1, opacity: 1, duration: 0.42, ease: "back.out(1.6)" }, t);
+      });
+      tl.fromTo("#hookShade", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, 0.42);
+      // slam 1 on the first downbeat, slam 2 on the next bar's beat
+      tl.fromTo(wis("#hk1"), { scale: 1.9, opacity: 0, filter: "blur(14px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.32, ease: "expo.out", stagger: 0.06 }, 0.5 - 0.06);
+      tl.fromTo(wis("#hk2"), { scale: 1.9, opacity: 0, filter: "blur(14px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.32, ease: "expo.out", stagger: 0.06 }, 1.5 - 0.06);
+      tl.fromTo("#pile", { x: 0, y: 0 }, { keyframes: [{ x: -14, y: 8 }, { x: 10, y: -6 }, { x: -5, y: 3 }, { x: 0, y: 0 }], duration: 0.3, ease: "none" }, 0.5);
+      tl.to("#pile", { keyframes: [{ x: 12, y: -8 }, { x: -8, y: 6 }, { x: 4, y: -2 }, { x: 0, y: 0 }], duration: 0.3, ease: "none" }, 1.5);
+      // anticipation: everything inhales before the drop
+      tl.to(wis("#hookText"), { yPercent: -115, opacity: 0, duration: 0.35, ease: "power3.in", stagger: 0.025 }, 3.45);
+      tl.to("#pile", { scale: 0.94, duration: 0.5, ease: "power2.in" }, 3.5);
+      tl.to("#hookShade", { opacity: 0, duration: 0.3 }, 3.7);
+
+      // ═════ 2 · REVEAL 4–9 ═════ DROP: chaos snaps into a clean grid
+      tl.to("#hookBg", { opacity: 0, duration: 0.18, ease: "none" }, 4.0);
+      tl.to("#pile", { scale: 1, duration: 0.5, ease: "back.out(2)" }, 4.0);
+      notices.forEach((n, i) => {
+        const g = gridPos(i);
+        tl.to(n, { x: g.x, y: g.y, rotation: 0, scale: GS, duration: 0.45, ease: "back.out(1.7)" }, 4.0 + (Math.abs(i % GCOLS - 3) + Math.abs(Math.floor(i / GCOLS) - 1.5)) * 0.012);
+      });
+      // grid folds into the logo, from the edges inward
+      tl.to(notices, { x: 0, y: 0, scale: 0.2, opacity: 0, rotation: 0, duration: 0.45, ease: "power3.in", stagger: { grid: [GROWS, GCOLS], from: "edges", amount: 0.22 } }, 4.5);
+      tl.fromTo("#logoPill", { scale: 0.3, opacity: 0, y: 190 }, { scale: 1.25, opacity: 1, y: 190, duration: 0.55, ease: "back.out(2.2)" }, 4.85);
+      tl.to("#logoPill", { scale: 0.8, y: 0, duration: 0.9, ease: "power3.inOut" }, 5.4);
+      tl.fromTo("#rvAv", { scale: 0, rotation: -20 }, { scale: 1, rotation: 0, duration: 0.7, ease: "back.out(2.4)" }, 5.6);
+      headIn("#rv1", 5.65, 0.9);
+      tl.to("#rvAv", { scale: 0, rotation: 15, duration: 0.35, ease: "back.in(2)" }, 6.85);
+      headOut("#rv1", 6.8);
+      headIn("#rv2", 7.05, 0.9);
+      tl.to("#revealStage", { y: -60, opacity: 0, scale: 0.97, duration: 0.45, ease: "power2.in" }, 8.8);
+
+      // ═════ 3 · FIND & QUALIFY 9–17 ═════
+      kickIn("#findKick", 9.0);
+      headIn("#fh1", 9.1);
+      winIn("#findWin", 9.0, { x: 120, y: 30, scale: 0.94 });
+      srcEls.forEach((s, i) => tl.fromTo(s, { opacity: 0, x: -50, scale: 0.85 }, { opacity: 1, x: 0, scale: 1, duration: 0.6, ease: "back.out(2)" }, 9.5 + i * 0.12));
+      wireEls.forEach((w, i) => {
+        tl.fromTo(w, { opacity: 0 }, { opacity: 0.8, duration: 0.3 }, 9.9 + i * 0.1);
+        tl.fromTo(w, { strokeDashoffset: 0 }, { strokeDashoffset: -140, duration: 5.6, ease: "none" }, 9.9);
+      });
+      // cards feed in on 8ths, fit scores roll up
+      opps.forEach((o, i) => {
+        const t = 10.0 + i * 0.25;
+        tl.fromTo(o.el, { opacity: 0, x: -70, scale: 0.92 }, { opacity: 1, x: 0, scale: 1, duration: 0.6, ease: "back.out(1.8)" }, t);
+        const tens = Math.floor(o.fit / 10), ones = o.fit % 10;
+        tl.fromTo(o.cols[0], { yPercent: 0 }, { yPercent: -((10 + tens) / 20) * 100, duration: 1.5, ease: "power3.out" }, t + 0.15);
+        tl.fromTo(o.cols[1], { yPercent: 0 }, { yPercent: -((10 + ones) / 20) * 100, duration: 1.7, ease: "power3.out" }, t + 0.15);
+      });
+      headOut("#fh1", 12.3);
+      headIn("#fh2", 12.55);
+      // weak cards dim, then slide out; strong ones close ranks and glow
+      const weak = opps.filter((o) => !o.strong), strong = opps.filter((o) => o.strong);
+      tl.to(weak.map((o) => o.el), { opacity: 0.4, filter: "grayscale(1)", duration: 0.35, stagger: 0.08 }, 13.0);
+      tl.to(weak.map((o) => o.el), { x: 160, opacity: 0, duration: 0.5, ease: "power3.in", stagger: 0.1 }, 13.5);
+      strong.forEach((o, k) => {
+        const from = opps.indexOf(o);
+        tl.to(o.el, { y: (k - from) * ROW, duration: 0.6, ease: "back.out(1.4)" }, 14.0 + k * 0.06);
+        tl.fromTo(o.glow, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, 14.5 + k * 0.1);
+        tl.fromTo(o.q, { opacity: 0, scale: 1.7, rotation: -8 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.45, ease: "back.out(2.6)" }, 15.0 + k * 0.25);
+      });
+      tl.fromTo("#emmaToast", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.6, ease: "back.out(1.6)" }, 15.5);
+      sceneOut(["#findWin", "#srcs", "#wires", "#emmaToast", "#findKick"], 16.6);
+      headOut("#fh2", 16.55);
+
+      // ═════ 4 · WRITE 17–24 ═════ sections fill one per beat-pair, slow push-in
+      kickIn("#writeKick", 17.0);
+      headIn("#wh1", 17.15);
+      winIn("#docCam", 17.0, { y: 140, scale: 0.92 });
+      tl.fromTo("#docCam", { scale: 1, y: 0 }, { scale: 1.1, y: -200, transformOrigin: "25% 20%", duration: 6.4, ease: "sine.inOut", immediateRender: false }, 17.6);
+      const secLines = ["#sec1", "#sec2", "#sec3"].map((s) => $$(`${s} .ln`));
+      $$(".ln .tx").forEach((tx) => gsap.set(tx, { clipPath: "inset(0 100% 0 0)" }));
+      [18.0, 19.0, 20.0].forEach((t0, si) => {
+        tl.fromTo(`#sec${si + 1} h6`, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.4 }, t0 - 0.15);
+        secLines[si].forEach((ln, li) => {
+          const t = t0 + li * 0.22;
+          tl.fromTo($(".tx", ln), { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 0.42, ease: "power2.inOut" }, t);
+          tl.to($(".sk", ln), { opacity: 0, duration: 0.3 }, t + 0.18);
+        });
+      });
+      tl.fromTo("#sec2 .cites .pill", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)", stagger: 0.1 }, 19.5);
+      tl.fromTo("#sec4 h6", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.4 }, 20.85);
+      tl.fromTo("#sec4 .price", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.45, stagger: 0.15 }, 21.0);
+      tl.fromTo("#hl3", { opacity: 0, scaleX: 0.96 }, { opacity: 1, scaleX: 1, duration: 0.4 }, 22.9);
+      // requirements tick off as each section lands
+      winIn("#reqCard", 17.6, { x: 80, y: 0, scale: 0.94 });
+      reqOn.forEach((on, i) => {
+        tl.fromTo(on, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(3)" }, 18.5 + i);
+        tl.to(reqCol, { yPercent: -((i + 1) / 20) * 100, duration: 0.4, ease: "back.out(2)" }, 18.5 + i);
+      });
+      tl.fromTo("#suggest", { opacity: 0, y: 40, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(2)" }, 22.0);
+      tl.to("#acceptBtn", { keyframes: [{ scale: 0.88, duration: 0.12, ease: "power2.in" }, { scale: 1, duration: 0.4, ease: "back.out(3)" }] }, 22.75);
+      tl.to("#suggest", { opacity: 0, y: -20, duration: 0.35, ease: "power2.in" }, 23.1);
+      sceneOut(["#docCam", "#reqCard", "#writeKick"], 23.6);
+      headOut("#wh1", 23.55);
+
+      // ═════ 5 · TEAM 24–31 ═════ notifications land on the beat, alternating sides
+      headIn("#teamHead", 24.05);
+      noteEls.forEach((n, i) => {
+        const t = 24.5 + i * 1.0;
+        tl.fromTo(n.el, { opacity: 0, x: n.side * 260, y: 40, rotation: n.side * 6, scale: 0.86 }, { opacity: 1, x: 0, y: 0, rotation: 0, scale: 1, duration: 0.75, ease: "back.out(1.9)" }, t - 0.08);
+        tl.fromTo($(".emma", n.el), { scale: 0.4 }, { scale: 1, duration: 0.6, ease: "elastic.out(1, 0.45)" }, t + 0.05);
+        tl.fromTo(n.el, { y: 0 }, { y: -10 - i * 3, duration: 6.4 - i, ease: "sine.inOut", immediateRender: false }, t + 0.7);
+      });
+      tl.to(noteEls.map((n) => n.el), { opacity: 0, y: "-=40", duration: 0.4, ease: "power2.in", stagger: 0.05 }, 30.55);
+      headOut("#teamHead", 30.5);
+
+      // ═════ 6 · BUYER 31–37 ═════ email lands, Emma drafts, sent tick
+      kickIn("#buyKick", 31.0);
+      headIn("#bh1", 31.1);
+      winIn("#mailWin", 31.0, { x: 100, y: 20, scale: 0.95 });
+      tl.fromTo("#inMail", { opacity: 0, y: -60, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(2.2)" }, 31.45);
+      tl.fromTo("#unread", { scale: 0 }, { scale: 1, duration: 0.4, ease: "back.out(3)" }, 31.7);
+      tl.fromTo("#reply", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.55, ease: "back.out(1.6)" }, 32.5);
+      $$("#reply .rl span").forEach((s, i) => {
+        gsap.set(s, { clipPath: "inset(0 100% 0 0)" });
+        tl.fromTo(s, { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 0.6, ease: "none" }, 33.0 + i * 0.55);
+      });
+      tl.fromTo("#caret", { opacity: 0 }, { keyframes: [{ opacity: 1, duration: 0.01 }, { opacity: 0, duration: 0.25, delay: 0.25 }, { opacity: 1, duration: 0.01, delay: 0.25 }, { opacity: 0, duration: 0.01, delay: 0.25 }] }, 34.6);
+      tl.to("#sendBtn", { keyframes: [{ scale: 0.9, duration: 0.12, ease: "power2.in" }, { scale: 1, duration: 0.45, ease: "back.out(3)" }] }, 34.9);
+      tl.fromTo("#sendBtn .b", { yPercent: 100 }, { yPercent: 0, duration: 0.35, ease: "power3.out" }, 35.05);
+      tl.fromTo("#sentTick", { strokeDasharray: 24, strokeDashoffset: 24 }, { strokeDashoffset: 0, duration: 0.35, ease: "power2.out" }, 35.5);
+      tl.fromTo("#sentNote", { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.5 }, 35.7);
+      tl.to("#unread", { scale: 0, duration: 0.3, ease: "back.in(2)" }, 35.5);
+      sceneOut(["#mailWin", "#buyKick"], 36.6);
+      headOut("#bh1", 36.55);
+
+      // ═════ 7 · PAYOFF 37–42 ═════ ask → half-beat pause → "Go 👍" → Submitted ✓
+      headIn("#ph1", 37.05);
+      winIn("#slackWin", 37.0, { x: 100, y: 30, scale: 0.95 });
+      tl.fromTo("#readyMsg", { opacity: 0, y: 40, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(2)" }, 37.95);
+      tl.fromTo("#typing", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 38.55);
+      $$("#typing i").forEach((d, i) => tl.fromTo(d, { y: 0 }, { keyframes: [{ y: -6, duration: 0.15 }, { y: 0, duration: 0.15 }, { y: -6, duration: 0.15 }, { y: 0, duration: 0.15 }], ease: "sine.inOut" }, 38.6 + i * 0.08));
+      tl.to("#typing", { opacity: 0, duration: 0.1 }, 39.2);
+      tl.fromTo("#goMsg", { opacity: 0, y: -30, scale: 0.9 }, { opacity: 1, y: -34, scale: 1, duration: 0.5, ease: "back.out(2.6)" }, 39.25);
+      // the burst lands on the downbeat
+      tl.to("#slackWin", { scale: 0.97, opacity: 0.35, filter: "blur(3px)", duration: 0.5, ease: "power2.out" }, 39.95);
+      tl.fromTo("#subPill", { scale: 0, rotation: -6 }, { scale: 1, rotation: 0, duration: 0.6, ease: "back.out(2.4)" }, 40.0);
+      tl.fromTo("#subTick", { strokeDasharray: 24, strokeDashoffset: 24 }, { strokeDashoffset: 0, duration: 0.35, ease: "power2.out" }, 40.3);
+      gsap.set(["#burst .ring", ...rays], { opacity: 0 });
+      tl.set(["#burst .ring", ...rays], { opacity: 1 }, 40.0);
+      tl.fromTo("#burst .ring", { scale: 0.3 }, { scale: 2.4, duration: 0.9, ease: "power2.out", immediateRender: false }, 40.0);
+      tl.to("#burst .ring", { opacity: 0, duration: 0.9, ease: "power2.in" }, 40.0);
+      tl.fromTo(rays, { scaleY: 0.2, y: 0 }, { scaleY: 1, y: -60, duration: 0.7, ease: "power3.out", immediateRender: false }, 40.0);
+      tl.to(rays, { opacity: 0, duration: 0.6, ease: "power2.in" }, 40.1);
+      // ballistic confetti: x/y linear + gravity as a quadratic (power1.in) yPercent term, all seek-safe
+      const FL = 1.6, G = 900;
+      pts.forEach((q, i) => {
+        const t0 = 40.0 + (i % 6) * 0.01;
+        tl.fromTo(q.p, { opacity: 1, x: 0, y: 0, rotation: 0 }, { x: q.vx * FL, y: q.vy * FL, rotation: q.spin * FL, duration: FL, ease: "none" }, t0);
+        tl.fromTo(q.p, { yPercent: 0 }, { yPercent: ((0.5 * G * FL * FL) / 12) * 100, duration: FL, ease: "power1.in" }, t0);
+        tl.to(q.p, { opacity: 0, duration: FL * 0.4, ease: "power1.in" }, t0 + FL * 0.6);
+      });
+      gsap.set(pts.map((q) => q.p), { opacity: 0 });
+      tl.to("#ph1", { opacity: 0, duration: 0.4 }, 41.75);
+
+      // ═════ 8 · CTA 42–45 ═════ held lockup on ink
+      tl.fromTo("#ctaBg", { clipPath: "circle(0% at 69.8% 50%)" }, { clipPath: "circle(150% at 69.8% 50%)", duration: 0.75, ease: "power3.inOut" }, 41.9);
+      tl.fromTo("#ctaPill", { opacity: 0, y: 40, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "back.out(2)" }, 42.2);
+      tl.fromTo(wis("#ctaHead"), { yPercent: 115, rotation: 4 }, { yPercent: 0, rotation: 0, duration: 0.9, ease: "expo.out", stagger: 0.08 }, 42.45);
+      tl.fromTo("#ctaUrl", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6 }, 43.1);
+      tl.fromTo("#ctaLine", { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 0.6, ease: "power3.inOut" }, 43.35);
+      tl.fromTo("#ctaStage", { scale: 1 }, { scale: 1.03, duration: 3.1, ease: "sine.out", immediateRender: false }, 41.9);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
