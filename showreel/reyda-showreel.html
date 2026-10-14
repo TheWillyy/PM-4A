@@ -1,0 +1,652 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Reyda Showreel</title>
+<style>
+:root{
+  --ink:#17112F; --ink2:#4E4A63; --mute:#8A8599; --line:#E6E3EF; --line2:#EEECF4;
+  --panel:#F7F6FB; --soft:#EFEDF5; --bg:#F4F2FA; --violet:#7A59E3;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--bg)}
+body{font-family:Inter,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;font-feature-settings:"cv11","ss01"}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;background:var(--bg)}
+#cam{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
+.scene{position:absolute;left:0;top:0;width:1920px;height:1080px;display:none}
+
+/* type */
+.cap{position:absolute;font-weight:600;letter-spacing:-0.035em;line-height:1.02;color:var(--ink);white-space:nowrap}
+.m{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .03em .14em;margin:0 -.03em -.14em}
+.w{display:inline-block}
+.acc{color:var(--violet)}
+
+/* windows */
+.win{position:absolute;background:#fff;border-radius:14px;transform-origin:0 0;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(23,17,47,.08),0 50px 90px -40px rgba(10,6,30,.28)}
+.tb{height:44px;background:var(--panel);border-bottom:1px solid var(--line2);display:flex;align-items:center;padding-left:18px;gap:8px}
+.tb i{width:11px;height:11px;border-radius:50%;background:#DDD9E8;display:block}
+.tb span{margin-left:16px;font-size:12px;font-weight:600;letter-spacing:.03em;color:var(--mute)}
+.pill{display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 11px;border:1px solid var(--line);border-radius:999px;font-size:13px;color:var(--ink2);white-space:nowrap;background:#fff}
+.pill svg{width:13px;height:13px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:34px;border:1px solid var(--line);border-radius:8px;font-size:14px;color:var(--ink2);background:#fff}
+.btn svg{width:14px;height:14px}
+.btn.dark{background:var(--ink);border-color:var(--ink);color:#fff}
+.tag{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;background:var(--soft);font-size:11px;font-weight:700;letter-spacing:.03em;color:var(--ink2)}
+svg.i{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+
+/* find */
+#wFind{left:700px;top:290px;width:1200px;height:560px}
+.find{display:flex;height:516px}
+.side{width:240px;border-right:1px solid var(--line2);padding:20px 13px}
+.nav{display:flex;align-items:center;gap:10px;height:34px;padding:0 12px;border-radius:8px;font-size:14px;font-weight:600;color:var(--ink2);margin-bottom:3px}
+.nav svg{width:14px;height:14px}
+.nav.on{background:var(--soft);color:var(--ink)}
+.sh{font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--mute);margin:26px 12px 14px}
+.ss{font-size:14px;color:var(--ink2);padding:0 12px;height:32px;line-height:32px}
+.main{flex:1;padding:30px 30px 0 29px;position:relative;overflow:hidden}
+.mh{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.mh b{font-size:19px;font-weight:500}
+.search{display:flex;align-items:center;gap:10px;height:46px;border:1px solid var(--line);border-radius:10px;padding:0 12px 0 14px;font-size:14px;margin-bottom:16px}
+.search svg{width:14px;height:14px;color:var(--ink2)}
+.kbd{margin-left:auto;width:22px;height:22px;border:1px solid var(--line);border-radius:5px;font-size:11px;display:flex;align-items:center;justify-content:center;color:var(--ink2);background:var(--panel)}
+.card{border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;background:#fff}
+.card .r1{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card .r1 b{font-size:16px;font-weight:500}
+.fit{display:inline-flex;align-items:center;height:27px;padding:0 10px;border-radius:7px;background:var(--soft);font-size:13px;font-weight:700;color:var(--ink)}
+.pills{display:flex;gap:8px;margin-bottom:14px}
+.btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+
+/* qualify */
+#wDoc{left:980px;top:210px;width:640px;height:330px}
+.doc{display:flex;height:286px}
+.thumb{width:230px;border-right:1px solid var(--line2);padding:20px}
+.page{border:1px solid var(--line);border-radius:6px;height:230px;padding:16px 14px}
+.page i{display:block;height:5px;border-radius:3px;background:var(--line2);margin-bottom:10px}
+.page i.k{background:#D9D5E6}
+.kc{flex:1;padding:22px 22px}
+.kc h4{font-size:15px;font-weight:700;margin-bottom:14px}
+.krow{display:flex;align-items:center;justify-content:space-between;height:40px;border-radius:9px;background:var(--panel);padding:0 12px;font-size:14px;margin-bottom:9px}
+.tick{width:24px;height:24px;border-radius:7px;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center}
+.tick svg{width:14px;height:14px;stroke:var(--ink2);stroke-width:2}
+#wDet{left:720px;top:470px;width:720px;height:390px}
+.det{padding:22px 24px}
+.dh{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.back{width:29px;height:29px;border:1px solid var(--line);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.back svg{width:12px;height:12px}
+.dh b{font-size:18px;font-weight:700;flex:1;letter-spacing:-.01em}
+.dh .btn{height:30px;padding:0 12px;font-size:13px}
+.dh .btn.dark{border-radius:6px}
+.dp{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;width:420px}
+.dcols{display:flex;gap:24px}
+.desc{width:236px}
+.desc h5,.facts h5{font-size:14px;font-weight:700;margin-bottom:8px}
+.desc p{font-size:13.5px;line-height:21px;color:var(--mute)}
+.facts{flex:1;border:1px solid var(--line);border-radius:10px;padding:14px 14px 4px}
+.fr{display:flex;justify-content:space-between;font-size:13px;color:var(--mute);height:30px;align-items:center;border-top:1px solid var(--line2)}
+.fr span:last-child{color:var(--ink2)}
+
+/* track */
+#wAct{left:980px;top:300px;width:600px;height:340px}
+.act{padding:20px 24px}
+.ev{display:flex;gap:14px;height:69px;position:relative}
+.node{width:30px;height:30px;border-radius:50%;background:var(--soft);display:flex;align-items:center;justify-content:center;flex:none;color:var(--ink2);position:relative;z-index:1}
+.node svg{width:12px;height:12px}
+.rail{position:absolute;left:15px;top:30px;width:1px;height:39px;background:var(--line)}
+.ev .k{font-size:10.5px;font-weight:700;letter-spacing:.03em;color:var(--ink2);margin-bottom:3px;margin-top:1px}
+.ev .t{font-size:14px;margin-bottom:3px}
+.ev .s{font-size:13px;color:var(--ink2)}
+.strike{position:relative;display:inline-block}
+.strike i{position:absolute;left:-1px;top:52%;height:1.5px;background:var(--ink2);display:block}
+
+/* draft */
+#wLib{left:860px;top:240px;width:600px;height:330px}
+.lib{padding:18px 22px}
+.ls{display:flex;align-items:center;gap:10px;height:36px;border:1px solid var(--line);border-radius:9px;padding:0 13px;font-size:14px;color:var(--mute);margin-bottom:8px}
+.ls svg{width:12px;height:12px}
+.lr{display:flex;align-items:center;gap:12px;height:43px;border-bottom:1px solid var(--line2);font-size:14px}
+.lr svg{width:15px;height:15px;color:var(--ink2)}
+.lr .tag{margin-left:auto}
+#wDraft{left:690px;top:520px;width:420px;height:164px;border-radius:14px}
+.dr{padding:18px 18px}
+.dr .k{font-size:11px;font-weight:700;letter-spacing:.03em;color:var(--ink2);margin-bottom:9px}
+.dr p{font-size:15px;line-height:24px;margin-bottom:12px}
+.sup{display:inline-block;width:20px;height:15px;vertical-align:7px;margin:0 2px;border-radius:4px}
+.sup.n{background:var(--soft);font-size:10px;font-weight:700;text-align:center;line-height:15px;color:var(--ink2)}
+.src{display:flex;gap:6px}
+.src .pill{height:26px;font-size:12px;color:var(--mute)}
+
+/* end */
+#wordmark{position:absolute;left:0;top:0;font-size:150px;font-weight:700;letter-spacing:-.05em;color:var(--ink);white-space:nowrap}
+#cta{position:absolute;font-size:40px;font-weight:500;letter-spacing:-.02em;color:var(--ink2);white-space:nowrap}
+#ctaU{position:absolute;height:3px;background:var(--ink);left:0;bottom:-6px}
+
+/* overlay */
+#chip{position:absolute;left:0;top:0;background:var(--violet);overflow:hidden;display:none;color:#fff}
+#chipIn{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;white-space:nowrap;font-weight:600}
+#chipCk{display:block;flex:none}
+#chipCk path{fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round}
+#chipBig{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:124px;font-weight:600;letter-spacing:-.04em;white-space:nowrap;color:#fff;display:none}
+#cursor{position:absolute;left:0;top:0;width:34px;height:34px;transform-origin:3px 3px;display:none}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <filter id="fbChip" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur id="fbChipG" stdDeviation="0 0"/></filter>
+  <filter id="fbCur" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur id="fbCurG" stdDeviation="0 0"/></filter>
+  <filter id="fbCam" x="0" y="0" width="100%" height="100%"><feGaussianBlur id="fbCamG" stdDeviation="0 0"/></filter>
+  <symbol id="ic-search" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.6"/><path d="M10.5 10.5 14 14"/></symbol>
+  <symbol id="ic-pen" viewBox="0 0 16 16"><path d="M3 13l1-3.5 7-7 2.5 2.5-7 7z"/></symbol>
+  <symbol id="ic-layers" viewBox="0 0 16 16"><path d="M8 2.5 14 5.5 8 8.5 2 5.5z"/><path d="M2 9l6 3 6-3"/></symbol>
+  <symbol id="ic-book" viewBox="0 0 16 16"><path d="M4.5 2.5h7v11L8 11l-3.5 2.5z"/></symbol>
+  <symbol id="ic-chat" viewBox="0 0 16 16"><path d="M3 12.5l.8-2.6A5 5 0 1 1 6 12z"/></symbol>
+  <symbol id="ic-check" viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7"/></symbol>
+  <symbol id="ic-bldg" viewBox="0 0 16 16"><rect x="3.5" y="2.5" width="9" height="11" rx="1"/><path d="M6 5.5h1M9 5.5h1M6 8h1M9 8h1M7 13.5v-2h2v2"/></symbol>
+  <symbol id="ic-clock" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></symbol>
+  <symbol id="ic-file" viewBox="0 0 16 16"><path d="M4 2h5l3 3v9H4z"/><path d="M9 2v3h3"/></symbol>
+  <symbol id="ic-cal" viewBox="0 0 16 16"><rect x="2.5" y="3.5" width="11" height="10" rx="1.5"/><path d="M2.5 6.5h11M5.5 2v3M10.5 2v3"/></symbol>
+  <symbol id="ic-back" viewBox="0 0 16 16"><path d="M10 3 5 8l5 5"/></symbol>
+  <symbol id="ic-euro" viewBox="0 0 16 16"><path d="M11.5 4a4.5 4.5 0 1 0 0 8M3 7h6M3 9.5h6"/></symbol>
+</svg>
+
+<div id="stage">
+ <div id="cam">
+
+  <!-- HOOK -->
+  <div class="scene" id="sHook">
+    <div class="cap" id="hook" style="left:170px;top:350px;font-size:160px">
+      <div><span class="m"><span class="w">Tenders</span></span> <span class="m"><span class="w">take</span></span></div>
+      <div><span class="m"><span class="w" id="hForever">forever</span></span> <span class="m"><span class="w">to</span></span> <span class="m"><span class="w">read<span id="hDot">.</span></span></span></span></div>
+    </div>
+  </div>
+
+  <!-- FIND -->
+  <div class="scene" id="sFind">
+    <div class="cap" id="capFind" style="left:130px;top:150px;font-size:96px">
+      <div><span class="m"><span class="w">Tenders,</span></span></div>
+      <div><span class="m"><span class="w acc">matched.</span></span></div>
+    </div>
+    <div class="win" id="wFind" style="transform:scale(1.18)">
+      <div class="tb"><i></i><i></i><i></i><span>APP.REYDA.AI/FIND</span></div>
+      <div class="find">
+        <div class="side">
+          <div class="nav on"><svg class="i"><use href="#ic-search"/></svg>Search</div>
+          <div class="nav"><svg class="i"><use href="#ic-pen"/></svg>Drafts</div>
+          <div class="nav"><svg class="i"><use href="#ic-layers"/></svg>Submissions</div>
+          <div class="sh">SAVED SEARCHES</div>
+          <div class="ss">IT infrastructure DE</div>
+          <div class="ss">Cloud frameworks</div>
+          <div class="ss">Security audits</div>
+        </div>
+        <div class="main">
+          <div class="mh"><b>Matched opportunities</b><span class="tag">12 NEW</span></div>
+          <div class="search"><svg class="i"><use href="#ic-search"/></svg>IT infrastructure Germany
+            <span class="pill fpill">CPV 72000000</span><span class="pill fpill">Min. €500K</span><span class="kbd">/</span></div>
+          <div class="card" id="fCard1">
+            <div class="r1"><b>IT Infrastructure Modernization</b><span class="fit" id="fFit"><span id="fFitN">94</span>% FIT</span></div>
+            <div class="pills"><span class="pill"><svg class="i"><use href="#ic-bldg"/></svg>Bundesamt für Migration</span><span class="pill"><svg class="i"><use href="#ic-euro"/></svg>€2.4M</span><span class="pill"><svg class="i"><use href="#ic-clock"/></svg>12 days left</span></div>
+            <div class="btns"><span class="btn"><svg class="i"><use href="#ic-book"/></svg>Save</span><span class="btn"><svg class="i"><use href="#ic-chat"/></svg>Ask AI</span><span class="btn dark" id="fQual"><svg class="i"><use href="#ic-check"/></svg>Qualify</span></div>
+          </div>
+          <div class="card" id="fCard2">
+            <div class="r1"><b>Cloud Services Framework</b><span class="fit">87% FIT</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUALIFY -->
+  <div class="scene" id="sQual">
+    <div class="cap" id="capQual" style="left:130px;top:150px;font-size:96px">
+      <div><span class="m"><span class="w">Qualify</span></span></div>
+      <div><span class="m"><span class="w acc">before</span></span> <span class="m"><span class="w acc">reading.</span></span></div>
+    </div>
+    <div class="win" id="wDoc" style="transform:scale(1.22)">
+      <div class="tb"><i></i><i></i><i></i><span>TENDER_DOCUMENT.PDF</span></div>
+      <div class="doc">
+        <div class="thumb"><div class="page"><i style="width:62%"></i><i style="width:96%"></i><i style="width:86%"></i><i class="k" style="width:66%"></i><i style="width:90%"></i><i style="width:78%"></i><i class="k" style="width:58%"></i><i style="width:92%"></i><i style="width:70%"></i><i style="width:84%"></i></div></div>
+        <div class="kc">
+          <h4>Knockout criteria</h4>
+          <div class="krow">ISO 27001 certification<span class="tick" id="qT1"><svg class="i"><path id="qT1p" d="M3.5 8.5l3 3 6-7" pathLength="1"/></svg></span></div>
+          <div class="krow">Min. €5M annual turnover<span class="tick" id="qT2"><svg class="i"><path id="qT2p" d="M3.5 8.5l3 3 6-7" pathLength="1"/></svg></span></div>
+        </div>
+      </div>
+    </div>
+    <div class="win" id="wDet" style="transform:scale(1.22)">
+      <div class="tb"><i></i><i></i><i></i><span>TENDER DETAIL</span></div>
+      <div class="det">
+        <div class="dh"><span class="back"><svg class="i"><use href="#ic-back"/></svg></span><b>IT Infrastructure Modernization</b>
+          <span class="btn"><svg class="i"><use href="#ic-book"/></svg>Save</span><span class="btn dark" id="qQual"><svg class="i"><use href="#ic-check"/></svg>Qualify</span></div>
+        <div class="dp">
+          <span class="pill dpill"><svg class="i"><use href="#ic-file"/></svg>Open procedure</span>
+          <span class="pill dpill"><svg class="i"><use href="#ic-layers"/></svg>3 lots</span>
+          <span class="pill dpill"><svg class="i"><use href="#ic-cal"/></svg>Due Jan 28, 2026</span>
+          <span class="pill dpill"><svg class="i"><use href="#ic-bldg"/></svg>Bundesamt für Migration</span>
+        </div>
+        <div class="dcols">
+          <div class="desc"><h5>Summarized description</h5><p>The agency is modernising IT infrastructure across three lots: network, data centre and end-user devices. Bidders need ISO 27001, EU data residency and German-language support.</p></div>
+          <div class="facts"><h5>Key facts</h5>
+            <div class="fr"><span>Contract value</span><span>€2.4M – €3.1M</span></div>
+            <div class="fr"><span>Duration</span><span>36 months</span></div>
+            <div class="fr"><span>Deadline</span><span>Jan 28, 2026</span></div>
+            <div class="fr"><span>Procedure</span><span>Open</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRACK -->
+  <div class="scene" id="sTrack">
+    <div class="cap" id="capTrack" style="left:130px;top:170px;font-size:84px">
+      <div><span class="m"><span class="w">Know</span></span> <span class="m"><span class="w">the</span></span> <span class="m"><span class="w">moment</span></span></div>
+      <div><span class="m"><span class="w">a</span></span> <span class="m"><span class="w">tender</span></span> <span class="m"><span class="w acc">changes.</span></span></div>
+    </div>
+    <div class="win" id="wAct" style="transform:scale(1.5)">
+      <div class="tb"><i></i><i></i><i></i><span>ACTIVITY · CLEANING, 14 PRIMARY SCHOOLS</span></div>
+      <div class="act">
+        <div class="ev" id="ev1"><span class="node" id="n1"><svg class="i"><use href="#ic-cal"/></svg></span><span class="rail"></span>
+          <div class="evt"><div class="k"><span class="m"><span class="w">CORRECTION · 2H AGO</span></span></div><div class="t"><span class="m"><span class="w">Submission deadline moved</span></span></div>
+          <div class="s"><span class="strike">28 Oct<i id="strk"></i></span> <span id="newDate" style="display:inline-block">→ 04 Nov, 12:00</span></div></div></div>
+        <div class="ev" id="ev2"><span class="node" id="n2"><svg class="i"><use href="#ic-file"/></svg></span><span class="rail"></span>
+          <div class="evt"><div class="k"><span class="m"><span class="w">NEW DOCUMENT · 5H AGO</span></span></div><div class="t"><span class="m"><span class="w">Annex C v2.pdf</span></span></div><div class="s"><span class="m"><span class="w">Revised service schedule, 3 pages</span></span></div></div></div>
+        <div class="ev" id="ev3"><span class="node" id="n3"><svg class="i"><use href="#ic-chat"/></svg></span><span class="rail"></span>
+          <div class="evt"><div class="k"><span class="m"><span class="w">CLARIFICATION · YESTERDAY</span></span></div><div class="t"><span class="m"><span class="w">Q14 answered</span></span></div><div class="s"><span class="m"><span class="w">Subcontracting allowed up to 30%</span></span></div></div></div>
+        <div class="ev" id="ev4"><span class="node" id="n4"><svg class="i"><use href="#ic-check"/></svg></span>
+          <div class="evt"><div class="k"><span class="m"><span class="w">SYNCED</span></span></div><div class="t"><span class="m"><span class="w">Outlook calendar updated</span></span></div><div class="s"><span class="m"><span class="w">Reminders sent to LS and AM</span></span></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DRAFT -->
+  <div class="scene" id="sDraft">
+    <div class="win" id="wLib" style="transform:scale(1.4)">
+      <div class="tb"><i></i><i></i><i></i><span>KNOWLEDGE LIBRARY</span></div>
+      <div class="lib">
+        <div class="ls"><svg class="i"><use href="#ic-search"/></svg><span class="m"><span class="w" id="lPh">Search your documents</span></span></div>
+        <div class="lr"><svg class="i"><use href="#ic-file"/></svg><span class="m"><span class="w">Bid · Munich schools 2022</span></span><span class="tag">WON</span></div>
+        <div class="lr"><svg class="i"><use href="#ic-file"/></svg><span class="m"><span class="w">QA Handbook v4</span></span><span class="tag">PDF</span></div>
+        <div class="lr"><svg class="i"><use href="#ic-file"/></svg><span class="m"><span class="w">CV · Project lead</span></span><span class="tag">DOCX</span></div>
+      </div>
+    </div>
+    <div class="win" id="wDraft" style="transform:scale(1.4)">
+      <div class="dr">
+        <div class="k"><span class="m"><span class="w">DRAFT · 2.3 QUALITY ASSURANCE</span></span></div>
+        <p id="drP"><span class="m"><span class="w">Inspections</span></span> <span class="m"><span class="w">follow</span></span> <span class="m"><span class="w">a</span></span> <span class="m"><span class="w">digital</span></span> <span class="m"><span class="w">checklist</span></span><span class="sup" id="cit1"></span>, <span class="m"><span class="w">proven</span></span> <span class="m"><span class="w">across</span></span> <span class="m"><span class="w">14</span></span> <span class="m"><span class="w">school</span></span> <span class="m"><span class="w">sites</span></span><span class="m"><span class="w"><span class="sup n">2</span></span></span>.</p>
+        <div class="src"><span class="pill spill" id="src1">[1] QA Handbook p.12</span><span class="pill spill">[2] Munich bid</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- END -->
+  <div class="scene" id="sEnd">
+    <div id="tileSlot" style="position:absolute;left:640px;top:410px;width:150px;height:150px"></div>
+    <div id="wmClip" style="position:absolute;left:815px;top:388px;width:700px;height:200px;overflow:hidden">
+      <div id="wordmark">Reyda</div>
+    </div>
+    <div id="cta" style="left:822px;top:600px"><span class="m"><span class="w">Try</span></span> <span class="m"><span class="w">it</span></span> <span class="m"><span class="w">at</span></span> <span id="ctaLink" style="position:relative;display:inline-block;color:var(--ink)"><span class="m"><span class="w">reyda.ai</span></span><i id="ctaU"></i></span></div>
+  </div>
+
+ </div>
+
+ <div id="chip"><div id="chipIn"><svg id="chipCk" viewBox="0 0 16 16"><path id="chipCkP" d="M3.5 8.5l3 3 6-7" pathLength="1"/></svg><span id="chipLbl"></span></div><div id="chipBig"><span class="m"><span class="w">Drafts</span></span> <span class="m"><span class="w">from</span></span> <span class="m"><span class="w">past</span></span> <span class="m"><span class="w">bids.</span></span></div></div>
+ <svg id="cursor" viewBox="0 0 34 34"><path d="M4 3 L4 26 L10 20.5 L14.2 30 L18.4 28.2 L14.3 18.8 L22 18.6 Z" fill="#17112F" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>
+</div>
+
+<script>
+// ---------- math ----------
+const BEAT = 0.5;
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, u) => a + (b - a) * u;
+// under-damped spring, zeta 0.8 => ~1.5% overshoot, settled by u = 1
+function spring(u) {
+  if (u <= 0) return 0;
+  const z = 0.8, w = 8.5, wd = w * Math.sqrt(1 - z * z);
+  return 1 - Math.exp(-z * w * u) * (Math.cos(wd * u) + (z * w / wd) * Math.sin(wd * u));
+}
+// critically damped spring, no overshoot (camera)
+function crit(u) { if (u <= 0) return 0; const w = 7.5; return 1 - (1 + w * u) * Math.exp(-w * u); }
+const expoOut = u => u <= 0 ? 0 : u >= 1 ? 1 : 1 - Math.pow(2, -10 * u);
+const expoIn = u => u <= 0 ? 0 : u >= 1 ? 1 : Math.pow(2, 10 * (u - 1)) - Math.pow(2, -10) * (1 - u);
+const expoInOut = u => u <= 0 ? 0 : u >= 1 ? 1 : u < .5 ? Math.pow(2, 20 * u - 10) / 2 : (2 - Math.pow(2, -20 * u + 10)) / 2;
+// progress helpers (in beats)
+const bt = t => t / BEAT;
+const sp = (t, b0, d = 1) => spring((bt(t) - b0) / d);
+const cr = (t, b0, d = 1) => crit((bt(t) - b0) / d);
+const ex = (t, b0, d = 1) => expoOut((bt(t) - b0) / d);
+const lin = (t, b0, d = 1) => clamp((bt(t) - b0) / d);
+
+const $ = s => document.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+
+// ---------- scenes ----------
+const SCENES = [
+  { id: 'sHook', b0: 0, b1: 4 },
+  { id: 'sFind', b0: 4, b1: 10 },
+  { id: 'sQual', b0: 10, b1: 16 },
+  { id: 'sTrack', b0: 16, b1: 20 },
+  { id: 'sDraft', b0: 20, b1: 26 },
+  { id: 'sEnd', b0: 26, b1: 30 },
+];
+// visibility windows (beats) — scenes overlap only while folded into the chip
+const VIS = { sHook: [0, 3.9], sFind: [2.9, 10.4], sQual: [9.2, 16.2], sTrack: [14.9, 20.05], sDraft: [19.3, 26.4], sEnd: [25.2, 31] };
+
+function sceneIndexAt(b) { let k = 0; SCENES.forEach((s, i) => { if (b >= s.b0) k = i; }); return k; }
+// cumulative push: x1.04 per scene, continuous across cuts
+function push(t) {
+  const b = bt(t), k = sceneIndexAt(b), s = SCENES[k];
+  const p = clamp((b - s.b0) / (s.b1 - s.b0));
+  return Math.pow(1.04, k + p);
+}
+
+// ---------- world-rect cache for camera targets ----------
+let WR = {};
+function cacheWorld() {
+  const cam = $('#cam');
+  cam.style.transform = 'none';
+  SCENES.forEach(s => { const el = document.getElementById(s.id); el.style.display = 'block'; });
+  const ids = ['hook', 'fQual', 'fCard1', 'wFind', 'qT1', 'qT2', 'wDoc', 'wDet', 'qQual', 'n1', 'ev1', 'wAct', 'cit1', 'wDraft', 'wLib', 'tileSlot', 'hForever', 'capFind'];
+  ids.forEach(id => { const r = document.getElementById(id).getBoundingClientRect(); WR[id] = { x: r.left, y: r.top, w: r.width, h: r.height, cx: r.left + r.width / 2, cy: r.top + r.height / 2 }; });
+}
+
+// ---------- camera ----------
+// key: at beat b, over d beats, move so world point (cx,cy) sits at screen (ax,ay) with effective zoom E
+function C(b, d, cx, cy, E, ax = 960, ay = 540) { return { b, d, cx, cy, E, ax, ay }; }
+function at(id, dx = 0, dy = 0) { return [WR[id].cx + dx, WR[id].cy + dy]; }
+let CAM = [];
+function buildCam() {
+  const O = [960, 540];
+  CAM = [
+    C(-1, 1, 960, 540, 1.0),
+    C(3.0, 1.1, ...at('fQual', -80, -40), 1.55, 1060, 600),
+    C(4.8, 1.3, 990, 560, 0.93),
+    C(7.5, 1.0, ...at('fQual', -150, -60), 1.32, 1120, 640),
+    C(9.3, 1.0, ...at('qT1', -150, 10), 1.5, 1040, 560),
+    C(11.2, 1.2, 1000, 560, 0.91),
+    C(13.4, 1.0, ...at('qQual', -120, 40), 1.28, 1150, 560),
+    C(15.0, 1.1, ...at('ev1', 0, 0), 1.55, 960, 560),
+    C(17.2, 1.2, 1010, 540, 0.88),
+    C(20.4, 0.8, ...at('wDraft', 0, 0), 1.45, 960, 560),
+    C(23.8, 1.1, 1060, 500, 0.88),
+    C(25.5, 1.0, 960, 540, 0.82),
+  ];
+}
+function camAt(t) {
+  const b = bt(t);
+  let v = { cx: CAM[0].cx, cy: CAM[0].cy, E: CAM[0].E, ax: CAM[0].ax, ay: CAM[0].ay };
+  for (let i = 1; i < CAM.length; i++) {
+    const k = CAM[i]; if (b < k.b) break;
+    const u = crit((b - k.b) / k.d);
+    const prev = { ...v };
+    for (const f of ['cx', 'cy', 'E', 'ax', 'ay']) v[f] = lerp(prev[f], k[f], u);
+  }
+  // zoom keys are in effective zoom; combine with the scene push
+  const S = v.E * push(t);
+  return { S, tx: v.ax - v.cx * S, ty: v.ay - v.cy * S };
+}
+
+// ---------- chip ----------
+function R(x, y, w, h, r) { return { x, y, w, h, r }; }
+function scr(el) { const r = (typeof el === 'string' ? document.getElementById(el) : el).getBoundingClientRect(); return { x: r.left, y: r.top, w: r.width, h: r.height }; }
+function sq(rc, s, dx = 0, dy = 0) { return R(rc.x + rc.w / 2 - s / 2 + dx, rc.y + rc.h / 2 - s / 2 + dy, s, s, s * 0.28); }
+function inflate(rc, k, r) { return R(rc.x - k, rc.y - k, rc.w + 2 * k, rc.h + 2 * k, r); }
+// each target is a function of the current frame (measured live)
+const CK = [
+  { b: -9, d: 1, T: () => { const r = scr('hDot'); return R(r.x + r.w * 0.3, r.y + r.h * 0.72, r.w * 0.4, r.w * 0.4, r.w * 0.2); } },
+  { b: 1.95, d: 0.7, T: () => { const d = scr('hDot'); const f = scr(document.getElementById('hForever').parentElement); const s = f.h * 0.55; return R(d.x + 6, f.y + f.h * 0.48 - s / 2, s, s, s * 0.28); } },
+  { b: 2.45, d: 0.6, T: () => { const f = scr(document.getElementById('hForever').parentElement); const s = f.h * 0.55; return R(f.x, f.y + f.h * 0.48 - s / 2, f.w, s, s * 0.28); } },
+  { b: 3.05, d: 1.0, T: () => { const r = scr('fQual'); return R(r.x, r.y, r.w, r.h, r.h * 0.24); } },
+  { b: 8.95, d: 0.45, T: () => { const r = scr('fQual'); return sq(r, r.h * 1.1, 0, -r.h * 0.9); } },
+  { b: 9.35, d: 0.75, T: () => { const r = scr('qT1'); return R(r.x, r.y, r.w, r.h, r.w * 0.29); } },
+  { b: 10.85, d: 0.5, T: () => { const r = scr('qT2'); return R(r.x, r.y, r.w, r.h, r.w * 0.29); } },
+  { b: 11.85, d: 0.6, T: () => { const r = scr('qQual'); return R(r.x, r.y, r.w, r.h, r.h * 0.2); } },
+  { b: 14.6, d: 0.4, T: () => { const r = scr('qQual'); return sq(r, r.h * 1.15, 0, -r.h * 0.7); } },
+  { b: 15.05, d: 0.85, T: () => { const r = scr('n1'); return R(r.x, r.y, r.w, r.h, r.w / 2); } },
+  { b: 17.4, d: 0.45, T: () => { const r = scr('n2'); return R(r.x, r.y, r.w, r.h, r.w / 2); } },
+  { b: 17.9, d: 0.45, T: () => { const r = scr('n3'); return R(r.x, r.y, r.w, r.h, r.w / 2); } },
+  { b: 18.4, d: 0.45, T: () => { const r = scr('n4'); return R(r.x, r.y, r.w, r.h, r.w / 2); } },
+  { b: 19.35, d: 0.65, e: expoIn, T: () => R(-160, -500, 2240, 2080, 0) },
+  { b: 20.95, d: 0.9, T: () => { const r = scr('cit1'); return R(r.x, r.y, r.w, r.h, r.h * 0.27); } },
+  { b: 25.35, d: 0.95, T: () => { const r = scr('tileSlot'); return R(r.x, r.y, r.w, r.h, r.w * 0.27); } },
+];
+function chipKeyRect(t, i) { return CK[i].T(); }
+function chipAt(t) {
+  const b = bt(t);
+  let i = 0; for (let j = 0; j < CK.length; j++) if (b >= CK[j].b) i = j;
+  if (i === 0) return { ...chipKeyRect(t, 0), u: 1, i };
+  const k = CK[i];
+  const ease = k.e || spring;
+  const u = ease((b - k.b) / k.d);
+  const A = chipKeyRect(t, i - 1), Bz = chipKeyRect(t, i);
+  const o = {}; for (const f of ['x', 'y', 'w', 'h', 'r']) o[f] = lerp(A[f], Bz[f], u);
+  // velocity for directional blur (px per frame @60)
+  const u2 = ease((b - k.b - (1 / 60) / BEAT) / k.d);
+  o.vx = ((A.x + A.w / 2) * (1 - u) + (Bz.x + Bz.w / 2) * u) - ((A.x + A.w / 2) * (1 - u2) + (Bz.x + Bz.w / 2) * u2);
+  o.vy = ((A.y + A.h / 2) * (1 - u) + (Bz.y + Bz.h / 2) * u) - ((A.y + A.h / 2) * (1 - u2) + (Bz.y + Bz.h / 2) * u2);
+  o.i = i; o.u = u;
+  return o;
+}
+
+// ---------- fold / unfold windows from the chip ----------
+// stages: list of [beat, dur, targetLocalRect|null(full)] ; fold: [beat, dur]
+function localOf(win, rc) {
+  const wr = win.getBoundingClientRect(), k = wr.width / win.offsetWidth;
+  return { x: (rc.x - wr.left) / k, y: (rc.y - wr.top) / k, w: rc.w / k, h: rc.h / k, r: (rc.r || 0) / k };
+}
+function localEl(win, el) { const wr = win.getBoundingClientRect(), k = wr.width / win.offsetWidth, r = el.getBoundingClientRect(); return { x: (r.left - wr.left) / k, y: (r.top - wr.top) / k, w: r.width / k, h: r.height / k, r: 12 }; }
+function unfold(win, t, chip, stages, fold) {
+  const W = win.offsetWidth, H = win.offsetHeight;
+  let cur = localOf(win, chip);
+  for (const [b0, d, tgt] of stages) {
+    const u = crit((bt(t) - b0) / d);
+    const T = tgt ? localEl(win, tgt) : { x: 0, y: 0, w: W, h: H, r: 14 };
+    cur = { x: lerp(cur.x, T.x, u), y: lerp(cur.y, T.y, u), w: lerp(cur.w, T.w, u), h: lerp(cur.h, T.h, u), r: lerp(cur.r, T.r, u) };
+  }
+  if (fold) {
+    const u = expoInOut((bt(t) - fold[0]) / fold[1]);
+    const C2 = localOf(win, chip);
+    cur = { x: lerp(cur.x, C2.x, u), y: lerp(cur.y, C2.y, u), w: lerp(cur.w, C2.w, u), h: lerp(cur.h, C2.h, u), r: lerp(cur.r, C2.r, u) };
+  }
+  const top = cur.y, left = cur.x, right = W - (cur.x + cur.w), bottom = H - (cur.y + cur.h);
+  const shown = cur.w > 0.5 && cur.h > 0.5;
+  win.style.visibility = shown ? 'visible' : 'hidden';
+  win.style.clipPath = `inset(${top}px ${right}px ${bottom}px ${left}px round ${Math.max(0, cur.r)}px)`;
+}
+
+// ---------- word reveals ----------
+function words(el) { return $$('.w', el); }
+// rise in from below the mask; exit upward through the top (separate timing)
+function rise(ws, t, bIn, stag, bOut = null, stagOut = 0.06, dIn = 0.8) {
+  ws.forEach((w, i) => {
+    let y = (1 - sp(t, bIn + i * stag, dIn)) * 115;
+    if (bOut !== null) y -= ex(t, bOut + i * stagOut, 0.55) * 120;
+    w.style.transform = `translateY(${y}%)`;
+  });
+}
+function wipe(el, t, b0, d = 0.6) { const u = cr(t, b0, d); el.style.clipPath = `inset(-2px ${(1 - u) * 100}% -2px -2px)`; }
+
+// ---------- cursor ----------
+const CUR = [
+  // [beat, dur, target (fn -> screen point)]
+  [6.4, 0.01, () => ({ x: 2000, y: 1150 })],
+  [6.6, 1.3, () => { const r = scr('fFit'); return { x: r.x + r.w * 0.5, y: r.y + r.h + 40 }; }],
+  [7.6, 0.8, () => { const r = scr('fQual'); return { x: r.x + r.w * 0.62, y: r.y + r.h * 0.58 }; }],
+  [9.1, 0.8, () => ({ x: 2050, y: 1250 })],
+  [12.9, 0.01, () => ({ x: 1950, y: 1200 })],
+  [13.0, 1.0, () => { const r = scr('qQual'); return { x: r.x + r.w * 0.6, y: r.y + r.h * 0.6 }; }],
+  [14.6, 0.8, () => ({ x: 2050, y: 1250 })],
+  [22.9, 0.01, () => ({ x: 1950, y: 1150 })],
+  [23.0, 0.75, () => { const r = scr('cit1'); return { x: r.x + r.w * 0.55, y: r.y + r.h * 0.6 }; }],
+  [24.3, 0.9, () => ({ x: 2050, y: 1250 })],
+  [28.0, 0.01, () => ({ x: 1900, y: 1150 })],
+  [28.05, 0.9, () => { const r = scr('ctaLink'); return { x: r.x + r.w * 0.55, y: r.y + r.h * 0.72 }; }],
+];
+const CLICKS = [8.5, 14.0, 23.75, 29.0];
+const CUR_VIS = [[6.4, 9.9], [12.9, 15.4], [22.9, 25.2], [28.0, 31]];
+function curAt(t) {
+  const b = bt(t);
+  let i = 0; for (let j = 0; j < CUR.length; j++) if (b >= CUR[j][0]) i = j;
+  const A = CUR[Math.max(0, i - 1)][2](), Bp = CUR[i][2]();
+  const u = i === 0 ? 1 : crit((b - CUR[i][0]) / CUR[i][1]);
+  const u2 = i === 0 ? 1 : crit((b - CUR[i][0] - (1 / 60) / BEAT) / CUR[i][1]);
+  return { x: lerp(A.x, Bp.x, u), y: lerp(A.y, Bp.y, u), vx: (Bp.x - A.x) * (u - u2), vy: (Bp.y - A.y) * (u - u2) };
+}
+function press(t, cb) { // 1 -> 0.9 -> 1 around a click beat
+  const b = bt(t); const d = b - cb;
+  if (d < -0.2 || d > 0.6) return 0;
+  return d < 0 ? expoOut((d + 0.2) / 0.2) : 1 - spring(d / 0.5);
+}
+const pressAny = t => Math.max(...CLICKS.map(c => press(t, c)));
+
+// ---------- seek ----------
+function setBlur(id, el, vx, vy, k = 0.35, max = 14) {
+  const sx = Math.min(max, Math.abs(vx) * k), sy = Math.min(max, Math.abs(vy) * k);
+  if (sx < 0.4 && sy < 0.4) { el.style.filter = 'none'; return; }
+  document.getElementById(id).setAttribute('stdDeviation', `${sx.toFixed(2)} ${sy.toFixed(2)}`);
+  el.style.filter = `url(#${id.replace('G', '')})`;
+}
+
+window.seek = function (t) {
+  const b = bt(t);
+  // scene visibility
+  for (const s of SCENES) { const [a, z] = VIS[s.id]; document.getElementById(s.id).style.display = (b >= a && b < z) ? 'block' : 'none'; }
+
+  // camera
+  const c = camAt(t), c2 = camAt(t - 1 / 60);
+  const cam = $('#cam');
+  cam.style.transform = `translate(${c.tx}px, ${c.ty}px) scale(${c.S})`;
+  // pan speed of the frame centre (px / frame)
+  const wx = (960 - c.tx) / c.S, wy = (540 - c.ty) / c.S;
+  const pvx = (wx * c2.S + c2.tx) - 960, pvy = (wy * c2.S + c2.ty) - 540;
+  setBlur('fbCamG', cam, pvx, pvy, 0.25, 6);
+
+  // ---- HOOK ----
+  const hw = words($('#hook'));
+  // Tenders(0) take(1) forever(2) to(3) read.(4)
+  const hIn = [0, 0.5, 1.0, 1.2, 1.4];
+  hw.forEach((w, i) => {
+    let y = (1 - sp(t, hIn[i], 0.8)) * 115;
+    let x = 0;
+    if (i === 2) y += ex(t, 2.55, 0.5) * 120;          // knocked down by the chip
+    else y -= ex(t, 3.0 + [0, 0.08, 0, 0.16, 0.24][i], 0.55) * 120;
+    w.style.transform = `translate(${x}px, ${y}%)`;
+  });
+  $('#hDot').style.opacity = b >= 1.95 ? 0 : 1; // the period becomes the chip (chip covers it at that instant)
+
+  // ---- FIND ----
+  const chip = chipAt(t);
+  const wFind = $('#wFind');
+  unfold(wFind, t, chip, [[3.85, 0.9, $('#fCard1')], [4.85, 1.0, null]], [9.15, 0.75]);
+  rise(words($('#capFind')), t, 5.3, 0.3, 7.7, 0.08);
+  $$('.fpill').forEach((p, i) => wipe(p, t, 5.9 + i * 0.2, 0.6));
+  const fit = $('#fFit'); const fu = sp(t, 6.0, 0.8);
+  fit.style.transform = `scale(${0.6 + 0.4 * fu})`; fit.style.transformOrigin = '100% 50%';
+  fit.style.clipPath = `inset(-3px -3px -3px ${(1 - clamp(fu * 1.2)) * 100}%)`;
+  $('#fFitN').textContent = Math.round(94 * clamp(lin(t, 6.0, 0.9) * (2 - lin(t, 6.0, 0.9)))); // eased count to 94
+  $('#fCard2').style.transform = `translateY(${(1 - sp(t, 7.0, 0.9)) * 170}px)`;
+  const pr = pressAny(t);
+  $('#fQual').style.transform = `scale(${1 - 0.05 * press(t, 8.5)})`;
+  $('#qQual').style.transform = `scale(${1 - 0.05 * press(t, 14.0)})`;
+
+  // ---- QUALIFY ----
+  unfold($('#wDoc'), t, chip, [[9.8, 0.9, null]], [14.7, 0.75]);
+  unfold($('#wDet'), t, chip, [[12.05, 0.9, null]], [14.65, 0.75]);
+  rise(words($('#capQual')), t, 11.5, 0.25, 13.5, 0.08);
+  // ticks left behind as the chip hops
+  $('#qT1p').style.strokeDasharray = 1; $('#qT1p').style.strokeDashoffset = 1 - cr(t, 11.05, 0.5);
+  $('#qT2p').style.strokeDasharray = 1; $('#qT2p').style.strokeDashoffset = 1 - cr(t, 12.05, 0.5);
+  $$('.dpill').forEach((p, i) => wipe(p, t, 12.5 + i * 0.12, 0.6));
+  $$('#wDet .fr').forEach((r, i) => { r.style.transform = `translateY(${(1 - sp(t, 12.9 + i * 0.12, 0.7)) * 14}px)`; r.style.clipPath = `inset(0 0 ${(1 - cr(t, 12.9 + i * 0.12, 0.6)) * 100}% 0)`; });
+  $('#wDet .desc p').style.clipPath = `inset(0 0 ${(1 - cr(t, 12.7, 1.0)) * 100}% 0)`;
+
+  // ---- TRACK ----
+  unfold($('#wAct'), t, chip, [[15.75, 0.9, null]], [18.95, 0.45]);
+  rise(words($('#capTrack')), t, 17.4, 0.12, 18.85, 0.05);
+  const strk = $('#strk'); strk.style.width = `${cr(t, 16.4, 0.6) * 104}%`;
+  wipe($('#newDate'), t, 16.9, 0.7);
+  rise(words($('#ev1')), t, 15.85, 0.12);
+  const passB = [0, 17.5, 18.0, 18.5];
+  [2, 3, 4].forEach(n => rise(words($('#ev' + n)), t, passB[n - 1], 0.08));
+  [2, 3, 4].forEach(n => { $('#n' + n).style.transform = `scale(${0.5 + 0.5 * cr(t, passB[n - 1] - 0.15, 0.5)})`; });
+  $$('#wAct .rail').forEach((r, i) => { r.style.transformOrigin = '50% 0'; r.style.transform = `scaleY(${i === 0 ? cr(t, 17.3, 0.5) : cr(t, passB[i + 1] - 0.25, 0.4)})`; });
+
+  // ---- DRAFT ----
+  unfold($('#wDraft'), t, chip, [[20.0, 0.01, null]], [25.3, 0.75]);
+  unfold($('#wLib'), t, chip, [[20.0, 0.01, null]], [25.25, 0.75]);
+  rise(words($('#wDraft .k')), t, 21.2, 0.1);
+  rise(words($('#drP')), t, 21.6, 0.11);
+  $$('.spill').forEach((p, i) => wipe(p, t, 22.6 + i * 0.25, 0.6));
+  const hl = cr(t, 23.75, 0.4);
+  $('#src1').style.borderColor = `rgba(23,17,47,${0.1 + 0.8 * hl})`; $('#src1').style.color = hl > 0.5 ? 'var(--ink)' : 'var(--mute)';
+  rise(words($('#wLib')), t, 23.9, 0.15);
+  $$('#wLib .lr, #wLib .ls').forEach((r, i) => wipe(r, t, 23.75 + i * 0.15, 0.6));
+
+  // ---- END ----
+  const wm = $('#wordmark'); wm.style.transform = `translateX(${(1 - sp(t, 26.4, 1.0)) * -105}%)`;
+  rise(words($('#cta')), t, 27.4, 0.12);
+  $('#ctaU').style.width = `${cr(t, 28.0, 0.7) * 100}%`;
+  $('#ctaLink').style.transform = `scale(${1 - 0.04 * press(t, 29.0)})`;
+
+  // ---- chip render ----
+  const ch = $('#chip');
+  const chipOn = b >= 1.9;
+  ch.style.display = chipOn ? 'block' : 'none';
+  if (chipOn) {
+    const pk = pr * 0.06; // press squeeze when a click lands on the chip
+    const onChipClick = 0;
+    // 1.5px bleed so the button underneath never shows as a hairline
+    const w = chip.w * (1 - onChipClick) + 3, h = chip.h * (1 - onChipClick) + 3;
+    const x = chip.x + (chip.w - w) / 2, y = chip.y + (chip.h - h) / 2;
+    ch.style.left = x + 'px'; ch.style.top = y + 'px'; ch.style.width = w + 'px'; ch.style.height = h + 'px';
+    ch.style.borderRadius = Math.max(0, chip.r) + 'px';
+    setBlur('fbChipG', ch, chip.vx || 0, chip.vy || 0, 0.3, 16);
+    // content
+    const big = b >= 19.6 && b < 21.3;
+    $('#chipBig').style.display = big ? 'block' : 'none';
+    rise(words($('#chipBig')), t, 19.95, 0.1, 20.75, 0.06, 0.7);
+    let label = '';
+    if ((b >= 3.0 && b < 9.0) || (b >= 11.85 && b < 14.6)) label = 'Qualify';
+    if (b >= 20.9 && b < 25.4) label = '1';
+    const lbl = $('#chipLbl'); lbl.textContent = label;
+    const lblIn = label === '1' ? 21.1 : (b < 9 ? 3.1 : 11.9);
+    if (label) wipe(lbl, t, lblIn, 0.5);
+    const fs = Math.min(h * 0.4, 120);
+    lbl.style.fontSize = fs + 'px';
+    lbl.style.marginLeft = label && label !== '1' ? (fs * 0.5) + 'px' : '0';
+    // check: draws in at b2, hidden while big or citation, redraws for the logo tile
+    const ck = $('#chipCk'), ckp = $('#chipCkP');
+    let ckS = Math.min(h, w) * (label ? 0.5 : 0.62);
+    if (label) ckS = fs * 1.05;
+    let draw = cr(t, 2.0, 0.5);
+    let scl = 1;
+    if (b >= 19.35 && b < 25.6) scl = 1 - ex(t, 19.35, 0.3);
+    if (b >= 20.9 && b < 25.6) scl = 0;
+    if (b >= 25.6) { draw = cr(t, 26.0, 0.6); scl = 1; }
+    ck.style.display = (label === '1' || scl <= 0.01) ? 'none' : 'block';
+    ck.style.width = ck.style.height = (ckS * scl) + 'px';
+    ckp.style.strokeWidth = 2.1;
+    ckp.style.strokeDasharray = 1; ckp.style.strokeDashoffset = 1 - draw;
+  }
+
+  // ---- cursor ----
+  const cu = $('#cursor');
+  const cv = CUR_VIS.some(([a, z]) => b >= a && b < z);
+  cu.style.display = cv ? 'block' : 'none';
+  if (cv) {
+    const p = curAt(t);
+    const s = clamp(c.S, 1, 1.6) * 1.35 * (1 - 0.14 * pr);
+    cu.style.transform = `translate(${p.x - 3}px, ${p.y - 3}px) scale(${s})`;
+    setBlur('fbCurG', cu, p.vx, p.vy, 0.25, 10);
+  }
+};
+
+window.ready = (async () => {
+  await document.fonts.ready;
+  cacheWorld();
+  buildCam();
+  window.seek(0);
+  return true;
+})();
+</script>
+</body>
+</html>
