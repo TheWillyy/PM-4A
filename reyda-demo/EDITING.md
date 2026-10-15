@@ -28,7 +28,8 @@ Every headline and line of copy is a variable, so you edit it in a form rather t
 | **Headline size** | scales every headline, 0.7× to 1.3× |
 | **Accent colour** | the colour of the highlighted words |
 | **Hook · line 1 / 2**, **Reveal · line 1 / 2** | the opening lines |
-| **Find / Market / Requirements / Draft / Forms / Team · headline** | each scene's headline |
+| **Find / Requirements / Draft / Forms / Team · headline** | each scene's headline |
+| **Market · headline line 1 / 2** | "See buying history." and "Spot expiring contracts." (the second appears on the second beat) |
 | **… · chore line** | the small grey line above each headline that gets struck through |
 | **Handoff · line above / headline** | the "Ready for your review" scene |
 | **CTA · line 1 / 2 / URL** | the end card |
@@ -58,8 +59,11 @@ new timing.
 ## 4. What still needs code
 
 Things built by the script, rather than written as plain HTML, can't be edited in Studio:
-- the contents of the mock UI windows (tender cards, buyer profile, requirement rows, ESPD fields,
-  Slack and Teams messages)
+- the contents of the mock UI windows (tender cards, buyer profile, requirement rows, Slack and Teams
+  messages)
+- Emma's entries on the two tender forms. The pages are real images of TW 01 and TW 02 in
+  `assets/forms/`; her entries are listed in `index.html` under `// ── 7 · forms` as
+  `[x, y, text]` in PDF points, so changing a value or nudging its position is a one-line edit
 - exact positions of the windows
 
 All of them live in `index.html` and are labelled by scene:
