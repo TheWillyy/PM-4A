@@ -34,8 +34,8 @@ Every headline and line of copy is a variable, so you edit it in a form rather t
 | **Handoff · line above / headline** | the "Ready for your review" scene |
 | **CTA · line 1 / 2 / URL** | the end card |
 
-**Highlighted words:** wrap them in asterisks. `Finds the tenders *worth winning.*` shows
-"worth winning." in the accent colour.
+**Highlighted words:** wrap them in asterisks. `Finds opportunities *that fit your business.*` shows
+"that fit your business." in the accent colour.
 
 **Keep it short:** headlines sit in a fixed column. If a longer line wraps onto too many lines, turn
 **Headline size** down a step.
