@@ -34,7 +34,8 @@
       .wi { display: inline-block; }
       .colL { position: absolute; left: 130px; top: 0; bottom: 0; width: 640px; display: flex; flex-direction: column; justify-content: center; gap: 30px; }
       .colL .head { font-size: calc(84px * var(--hs)); }
-      .kick { align-self: flex-start; position: relative; font: 600 24px/1.2 var(--sans); color: var(--soft); padding: 2px 0; }
+      .kick { align-self: flex-start; position: relative; font: 600 27px/1.2 var(--sans); color: var(--soft); padding: 2px 0; }
+      .kick .strike { position: absolute; left: -4px; right: -4px; top: 52%; height: 3px; border-radius: 2px; background: var(--violet); display: block; }
       .kick.ok { color: var(--violet-d); display: flex; align-items: center; gap: 12px; }
       .kick.ok i { display: block; width: 40px; height: 3px; border-radius: 2px; background: var(--violet); }
 
@@ -42,8 +43,8 @@
       .win { position: absolute; background: #fff; border-radius: 22px; box-shadow: 0 2px 0 rgba(23, 17, 47, 0.04), 0 30px 80px -20px rgba(46, 42, 69, 0.28), 0 0 0 1px rgba(46, 42, 69, 0.06); overflow: hidden; }
       .chrome { height: 54px; display: flex; align-items: center; gap: 10px; padding: 0 22px; border-bottom: 1px solid var(--line); font: 600 15px/1 var(--sans); letter-spacing: 0.08em; text-transform: uppercase; color: var(--soft); }
       .chrome b { width: 12px; height: 12px; border-radius: 50%; background: #dcd8e8; display: block; }
-      .chrome span { margin-left: 10px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-      .chrome .right { margin-left: auto; padding-left: 16px; flex: none; }
+      .chrome > span { margin-left: 10px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .chrome > .right { margin-left: auto; padding-left: 16px; flex: none; }
       .pill { display: inline-flex; align-items: center; gap: 8px; padding: 0 16px; height: 38px; border-radius: 19px; border: 1px solid var(--line); font: 500 17px/1 var(--sans); color: var(--ink-2); background: #fff; white-space: nowrap; }
       .badge { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 14px; font: 700 14px/1 var(--sans); letter-spacing: 0.06em; white-space: nowrap; }
       .tag { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 12px; background: var(--violet-l); color: var(--violet-d); font: 600 14px/1 var(--sans); }
@@ -499,7 +500,7 @@
       <!-- 3 · FIND (10–16) -->
       <section id="s-find" class="clip" data-start="9.6" data-duration="6.8" data-track-index="2">
         <div class="colL" data-layout-allow-overlap>
-          <div class="kick" id="kFind">Checking dozens of portals</div>
+          <div class="kick" id="kFind">Checking dozens of portals<i class="strike"></i></div>
           <div class="head" id="hFind">Finds opportunities <em>that fit your business.</em></div>
         </div>
         <svg id="wires"></svg>
@@ -518,7 +519,7 @@
       <!-- 4 · MARKET INTELLIGENCE (16–23) -->
       <section id="s-market" class="clip" data-start="15.6" data-duration="7.8" data-track-index="3">
         <div class="colL" data-layout-allow-overlap>
-          <div class="kick" id="kMkt">Digging through old award notices</div>
+          <div class="kick" id="kMkt">Digging through old award notices<i class="strike"></i></div>
           <div class="hstack"><div class="head" id="hMkt1">See buying history.</div><div class="head" id="hMkt2"><em>Spot expiring contracts.</em></div></div>
         </div>
         <div class="win" id="mktWin" data-layout-allow-overlap>
@@ -563,7 +564,7 @@
       <!-- 5 · REQUIREMENTS (22–27) -->
       <section id="s-req" class="clip" data-start="22.6" data-duration="5.8" data-track-index="4">
         <div class="colL" data-layout-allow-overlap>
-          <div class="kick" id="kReq">A 212-page tender pack</div>
+          <div class="kick" id="kReq">A 212-page tender pack<i class="strike"></i></div>
           <div class="head" id="hReq">Reviews tender <em>requirements.</em></div>
         </div>
         <div class="win" id="pdfWin">
@@ -580,7 +581,7 @@
       <!-- 6 · DRAFT (27–33) -->
       <section id="s-draft" class="clip" data-start="27.6" data-duration="6.8" data-track-index="5">
         <div class="colL" data-layout-allow-overlap>
-          <div class="kick" id="kDraft">Starting from a blank page</div>
+          <div class="kick" id="kDraft">Starting from a blank page<i class="strike"></i></div>
           <div class="head" id="hDraft">Drafts your <em>proposal.</em></div>
         </div>
         <div id="docCam" data-layout-allow-overlap>
@@ -627,7 +628,7 @@
       <!-- 7 · FORMS (34–41) · the real tender forms; Emma's entries are a layer on top -->
       <section id="s-forms" class="clip" data-start="33.6" data-duration="7.8" data-track-index="6">
         <div class="colL" data-layout-allow-overlap>
-          <div class="kick" id="kForms">Two forms, filled in by hand</div>
+          <div class="kick" id="kForms">Two forms, filled in by hand<i class="strike"></i></div>
           <div class="head" id="hForms">Fills out <em>the forms.</em></div>
         </div>
         <div class="win" id="formWin" data-layout-allow-overlap>
@@ -646,7 +647,7 @@
       <!-- 8 · TEAM (41–49) · Emma asks, a colleague answers, the answer goes into the bid -->
       <section id="s-team" class="clip" data-start="40.6" data-duration="8.8" data-track-index="7">
         <div id="teamTop">
-          <div class="kick" id="kTeam">Chasing colleagues for answers</div>
+          <div class="kick" id="kTeam">Chasing colleagues for answers<i class="strike"></i></div>
           <div class="head" id="hTeam">Works <em>where you work.</em></div>
         </div>
         <svg id="links" data-layout-allow-overlap><path id="link1" d="M900 420 C950 420 950 420 1000 420" /><path id="link2" d="M900 735 C950 735 950 735 1000 735" /></svg>
@@ -905,9 +906,10 @@
       const wis = (sel) => $$(`${sel} .wi`);
       const headIn = (sel, t, d = 0.85) => T.fromTo(wis(sel), { yPercent: 115, rotation: 5 }, { yPercent: 0, rotation: 0, duration: d, ease: "expo.out", stagger: 0.055 }, t);
       const headOut = (sel, t) => T.to(wis(sel), { yPercent: -115, duration: 0.42, ease: "power3.in", stagger: 0.03 }, t);
-      // the chore line: the work Emma takes off your plate
-      const kickIn = (sel, t) => {
+      // the chore line arrives, then gets struck through: the work Emma takes off your plate
+      const kickIn = (sel, t, strikeAt) => {
         T.fromTo(sel, { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.6 }, t);
+        T.fromTo(`${sel} .strike`, { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 0.45, ease: "power2.inOut" }, strikeAt);
       };
       const kickOut = (sel, t) => T.to(sel, { opacity: 0, y: -16, duration: 0.35, ease: "power2.in" }, t);
       const winIn = (sel, t, from = { y: 90, scale: 0.94 }) => T.fromTo(sel, { opacity: 0, ...from }, { opacity: 1, y: 0, x: 0, scale: 1, duration: 0.9, ease: "back.out(1.25)" }, t);

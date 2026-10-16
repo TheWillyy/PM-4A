@@ -30,7 +30,7 @@ Every headline and line of copy is a variable, so you edit it in a form rather t
 | **Hook · line 1 / 2**, **Reveal · line 1 / 2** | the opening lines |
 | **Find / Requirements / Draft / Forms / Team · headline** | each scene's headline |
 | **Market · headline line 1 / 2** | "See buying history." and "Spot expiring contracts." (the second appears on the second beat) |
-| **… · chore line** | the small grey line above each headline |
+| **… · chore line** | the small grey line above each headline that gets struck through |
 | **Handoff · line above / headline** | the "Ready for your review" scene |
 | **CTA · line 1 / 2 / URL** | the end card |
 
