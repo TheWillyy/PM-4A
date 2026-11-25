@@ -29,13 +29,13 @@ Every headline and line of copy is a variable, so you edit it in a form rather t
 | **Accent colour** | the colour of the highlighted words |
 | **Hook · line 1 / 2**, **Reveal · line 1 / 2** | the opening lines |
 | **Find / Requirements / Draft / Forms / Team · headline** | each scene's headline |
-| **Market · headline line 1 / 2** | "See buying history." and "Spot expiring contracts." (the second appears on the second beat) |
+| **Market · headline line 1 / 2** | "See the next contract" and "before your competitors do." (the second appears on the second beat) |
 | **… · chore line** | the small grey line above each headline that gets struck through |
-| **Handoff · line above / headline** | the "Ready for your review" scene |
+| **Handoff · line above / headline** | the "Emma does the work. You approve it." scene |
 | **CTA · line 1 / 2 / URL** | the end card |
 
-**Highlighted words:** wrap them in asterisks. `Finds opportunities *that fit your business.*` shows
-"that fit your business." in the accent colour.
+**Highlighted words:** wrap them in asterisks. `Only see the tenders *worth your time.*` shows
+"worth your time." in the accent colour.
 
 **Keep it short:** headlines sit in a fixed column. If a longer line wraps onto too many lines, turn
 **Headline size** down a step.
